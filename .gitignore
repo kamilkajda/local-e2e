@@ -6,8 +6,10 @@ __pycache__/
 
 # Logs
 logs/
-logs/.gitkeep
+!logs/.gitkeep
 *.log
+
+
 
 # Data (only schemas should be in the repo)
 data/raw/
