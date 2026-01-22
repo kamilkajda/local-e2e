@@ -1,0 +1,8 @@
+relationship AutoDetected_45d972df-2e3c-4ab9-bb8d-8f854a9bb074
+	fromColumn: Fact_Economics.variable_id
+	toColumn: Dim_Metrics.variable_id
+
+relationship AutoDetected_1f4883b1-f257-4b31-a766-41837a25c057
+	fromColumn: Fact_Economics.unit_id
+	toColumn: Dim_Region.unit_id
+

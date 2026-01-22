@@ -1,0 +1,33 @@
+table Dim_Calendar
+	lineageTag: d0e3e26c-6556-44ac-8bfe-a0b8d87cf0ac
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: d49f131e-c3ba-41d3-a1d8-d18d7a512b9d
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column decade
+		dataType: int64
+		formatString: 0
+		lineageTag: 4821c258-add2-4477-8fea-f6145062be00
+		summarizeBy: sum
+		sourceColumn: decade
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Calendar = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Dim_Calendar/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

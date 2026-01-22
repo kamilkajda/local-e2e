@@ -1,0 +1,31 @@
+table Dim_Region
+	lineageTag: 5fe1b65b-4b71-46d0-883b-f58b77c852e2
+
+	column unit_id
+		dataType: string
+		lineageTag: a738ac6e-8ac9-4cbf-8f3a-b7ee10796f19
+		summarizeBy: none
+		sourceColumn: unit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_name
+		dataType: string
+		lineageTag: 96fe22fb-fd3c-43d3-b13c-ba64ec04be18
+		summarizeBy: none
+		sourceColumn: unit_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Region = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Dim_Region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

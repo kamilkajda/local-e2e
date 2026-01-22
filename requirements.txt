@@ -1,0 +1,8 @@
+pyspark==3.5.0
+pandas
+numpy
+pyarrow
+requests
+azure-storage-blob
+matplotlib
+jupyter

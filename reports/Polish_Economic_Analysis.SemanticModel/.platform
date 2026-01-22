@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Polish_Economic_Analysis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "54e9810a-1e99-4f97-940a-2bbbd854f82c"
+  }
+}

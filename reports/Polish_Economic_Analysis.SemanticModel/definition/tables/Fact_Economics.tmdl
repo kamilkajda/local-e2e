@@ -1,0 +1,51 @@
+table Fact_Economics
+	lineageTag: 6d40c66b-a579-4984-b13d-71d49fb6bec9
+
+	column unit_id
+		dataType: string
+		lineageTag: ad0c5472-3ca7-488f-8241-2a17f051e057
+		summarizeBy: none
+		sourceColumn: unit_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: c8c430ca-2f6f-4b41-8372-f9eceaf730a2
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: double
+		lineageTag: 411285a2-7fdb-4603-bd36-9e32890f3575
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column variable_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 86c83d95-fe6c-4b61-a1a7-aa49dc7516d3
+		summarizeBy: none
+		sourceColumn: variable_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Economics = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Fact_Economics/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

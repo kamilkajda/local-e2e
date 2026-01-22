@@ -1,0 +1,13 @@
+
+name, search_phrase, variable_id
+Przeciętny miesięczny dochód rozporządzalny na 1 osobę, "dochód rozporządzalny", 216968
+Przeciętne miesięczne wydatki na 1 osobę (ogółem), "wydatki na 1 osobę", 7737
+Przeciętne miesięczne wynagrodzenia brutto, "wynagrodzenia brutto", 64428
+Stopa bezrobocia (BAEL - Ogółem), "stopa bezrobocia", 450231
+Produkt Krajowy Brutto (PKB) na 1 mieszkańca, "produkt krajowy brutto", 65717
+Nakłady inwestycyjne w przedsiębiorstwach (na 1 mieszkańca), "nakłady inwestycyjne", 397832
+Podmioty gospodarki narodowej (Liczba firm na 10 tys. ludności), "podmioty gospodarki", 60530
+Mieszkania oddane do użytkowania (na 1000 ludności), "mieszkania oddane", 747060
+Cena 1 m2 powierzchni użytkowej, "cena 1 m2", 633692
+Dochody budżetów województw (na 1 mieszkańca), "dochody budżetów", 60508
+Wydatki bieżące budżetów województw (na 1 mieszkańca), "wydatki budżetów", 60518

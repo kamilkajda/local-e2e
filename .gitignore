@@ -1,0 +1,35 @@
+﻿# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Logs
+logs/
+logs/.gitkeep
+*.log
+
+# Data (only schemas should be in the repo)
+data/raw/
+!data/raw/.gitkeep
+data/processed/
+!data/processed/.gitkeep
+data/curated/
+!data/curated/.gitkeep
+data/staging/
+!data/staging/.gitkeep
+
+# IDE/System
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Configuration (Ignore local active settings, keep ALL templates)
+configs/dev/settings.json
+configs/prod/settings.json
+!configs/**/*_template.json
+
+
+# Power BI Cache & Local settings
+**/.pbi/
+*.pbix

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Polish_Economic_Analysis"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "223c533f-9498-4642-b76c-354dff4e0ca3"
+  }
+}

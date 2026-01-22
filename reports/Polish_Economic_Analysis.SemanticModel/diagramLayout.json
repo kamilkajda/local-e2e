@@ -1,0 +1,74 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 852.38305001469371,
+            "y": 34.422348979922418
+          },
+          "nodeIndex": "Dim_Calendar",
+          "nodeLineageTag": "d0e3e26c-6556-44ac-8bfe-a0b8d87cf0ac",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.38305001469359,
+            "y": -49.999999999999986
+          },
+          "nodeIndex": "Dim_Metrics",
+          "nodeLineageTag": "df227e91-afb2-43f4-b481-9de4159f7973",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -8.0148892204010025
+          },
+          "nodeIndex": "Dim_Region",
+          "nodeLineageTag": "5fe1b65b-4b71-46d0-883b-f58b77c852e2",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.20156119318517,
+            "y": -29.155302040155163
+          },
+          "nodeIndex": "Fact_Economics",
+          "nodeLineageTag": "6d40c66b-a579-4984-b13d-71d49fb6bec9",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}
