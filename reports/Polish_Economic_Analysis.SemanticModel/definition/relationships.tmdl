@@ -6,3 +6,7 @@ relationship AutoDetected_1f4883b1-f257-4b31-a766-41837a25c057
 	fromColumn: Fact_Economics.unit_id
 	toColumn: Dim_Region.unit_id
 
+relationship 696f381d-bb59-e06e-8c6b-3ea69019c0ee
+	fromColumn: Fact_Economics.year
+	toColumn: Dim_Calendar.year
+

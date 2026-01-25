@@ -1,0 +1,1215 @@
+table _Measures
+	lineageTag: 3d36f44b-41bf-43a1-95bc-c239eadfa8ca
+
+	measure 'Avg Gross Wage' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 64428
+			)
+		displayFolder: Labor Market
+		lineageTag: 17d193e9-71a5-4d1f-a0ac-88ea7fcbd962
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Gross Wage (Poland)' =
+			
+			CALCULATE(
+			    [Avg Gross Wage],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Labor Market
+		lineageTag: dc1a8add-d3bf-486e-aea4-1bee37b9c9b2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Gross Wages YoY %' = ```
+			
+			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR CurrentVal = [Avg Gross Wage]
+			VAR PrevVal = 
+			    CALCULATE(
+			        [Avg Gross Wage], 
+			        'Dim_Calendar'[year] = CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(CurrentVal - PrevVal, PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: 03858e8d-f622-4aaf-925d-4e976f2c9099
+
+	measure 'Avg Gross Wages (Poland) YoY %' = ```
+			
+			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR CurrentVal = [Avg Gross Wage (Poland)]
+			VAR PrevVal = 
+			    CALCULATE(
+			        [Avg Gross Wage (Poland)], 
+			        'Dim_Calendar'[year] = CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(CurrentVal - PrevVal, PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: e4b22186-4059-4c7c-90df-69fa0c9bebe5
+
+	measure 'Avg Gross Wage vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Gross Wage] - [Avg Gross Wage (Poland)], 
+			    [Avg Gross Wage (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: b1c3f509-0456-4d0f-84d7-baf298b4487b
+
+	measure 'Color Status Wages' = ```
+			
+			VAR _Trend = [Avg Gross Wages YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green (Growth is good)
+			        _Trend < 0, "#FF0000", -- Red (Decline is bad)
+			        "#808080"              -- Grey (No change)
+			    )
+			
+			```
+		displayFolder: UI Mapping
+		lineageTag: 1f21ae4a-61f9-4e97-adfa-010ff1e38568
+
+	measure 'Avg Unemployment Rate' = ```
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 60270
+			)
+			
+			```
+		displayFolder: Labor Market
+		lineageTag: b99b3cb7-dd39-4ad0-86ed-74490519be6b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Unemployment Rate (Poland)' = ```
+			
+			CALCULATE(
+			    [Avg Unemployment Rate],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+			
+			```
+		displayFolder: Labor Market
+		lineageTag: f71171a2-23a5-4a11-a2f0-dfe5d9e8faff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Unemployment YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Unemployment Rate]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Unemployment Rate], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: 9a3e698c-9d3e-40a8-8722-fb9ca45d2279
+
+	measure 'Avg Unemployment (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Unemployment Rate (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Unemployment Rate (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: a51a62df-630f-4d48-9623-e0c6d8c2cf97
+
+	measure 'Avg Unemployment vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Unemployment Rate] - [Avg Unemployment Rate (Poland)], 
+			    [Avg Unemployment Rate (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Labor Market
+		lineageTag: 9b77fa51-b9b0-4790-92d5-9be694fec3c9
+
+	measure 'Color Status Unemployment' = ```
+			
+			VAR _Trend = [Avg Unemployment YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend < 0, "#00C805", -- Green (Decrease is good)
+			        _Trend > 0, "#FF0000", -- Red (Increase is bad)
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 2ee974c7-6352-4134-814b-81a17261489b
+
+	measure 'Avg GDP per Capita' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 458421
+			)
+		displayFolder: Economy
+		lineageTag: fc9c7472-aefc-483e-950b-9fe97e9624c4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg GDP per Capita (Poland)' =
+			
+			CALCULATE(
+			    [Avg GDP per Capita],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Economy
+		lineageTag: d91dd4b2-b323-4c89-90d7-f39defe5e54d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg GDP YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg GDP per Capita]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg GDP per Capita], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: 044f21f1-2f99-4827-a0db-5a4ec728b809
+
+	measure 'Avg GDP (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg GDP per Capita (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg GDP per Capita (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: 207056a9-03b5-420b-a770-b2008c2e0c9a
+
+	measure 'Avg GDP vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg GDP per Capita] - [Avg GDP per Capita (Poland)], 
+			    [Avg GDP per Capita (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: 00b8b2e5-3fe9-4258-88b2-74cc52edb399
+
+	measure 'Avg Investment per Capita' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 60520
+			)
+		displayFolder: Economy
+		lineageTag: c56a538e-368d-4774-945c-dbf59c113150
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Investment (Poland) per Capita' =
+			
+			CALCULATE(
+			    [Avg Investment per Capita],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Economy
+		lineageTag: d62349b2-a880-4d21-9630-35bca2cc32c8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Investment YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Investment per Capita]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Investment per Capita], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: 3ee2f1fd-43df-406f-b4a7-adfe4e010e26
+
+	measure 'Avg Investment (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Investment (Poland) per Capita]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Investment (Poland) per Capita], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: f95b1aa9-f110-416d-b608-de658952c36e
+
+	measure 'Avg Investment vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Investment per Capita] - [Avg Investment (Poland) per Capita], 
+			    [Avg Investment (Poland) per Capita]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Economy
+		lineageTag: cf853d19-b41e-4e30-ba48-d83a13366364
+
+	measure 'Color Status GDP' = ```
+			
+			VAR _Trend = [Avg GDP YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: d699253f-d37b-4732-8d25-761a9acdd2d0
+
+	measure 'Color Status Investment' = ```
+			
+			VAR _Trend = [Avg Investment YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 9650816b-ddd1-4d3f-9b15-6738f57edf36
+
+	measure 'Avg Household Disposable Income' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 216968
+			)
+		displayFolder: Living Standards
+		lineageTag: 95cc03d9-d7da-45eb-abda-2905d79fdbe2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Household Disposable Income (Poland)' =
+			
+			CALCULATE(
+			    [Avg Household Disposable Income],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Living Standards
+		lineageTag: 5b3e352f-060b-453f-8b99-8629c2c57a59
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Household Disposable Income YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Household Disposable Income]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Household Disposable Income], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: 9f46314d-c605-4367-b83d-dfd0a47dbf1f
+
+	measure 'Avg Household Disposable Income (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Household Disposable Income (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Household Disposable Income (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: 22c800ae-5c01-4c91-a429-c44343e02969
+
+	measure 'Avg Household Disposable Income vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Household Disposable Income] - [Avg Household Disposable Income (Poland)], 
+			    [Avg Household Disposable Income (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: cd19d833-580d-4189-94a7-88aea48bf5d5
+
+	measure 'Avg Household Expenditures' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 7737
+			)
+		displayFolder: Living Standards
+		lineageTag: 0be7c860-db21-440a-8d0f-0017172de529
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Household Expenditures (Poland)' =
+			
+			CALCULATE(
+			    [Avg Household Expenditures],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Living Standards
+		lineageTag: 1b5b0c01-aa92-42a0-bf59-174a0794125e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Household Expenditures YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Household Expenditures]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Household Expenditures], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: 4f78e33b-36cf-4a43-a298-f6dc418cdbc9
+
+	measure 'Avg Household Expenditures (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Household Expenditures (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Household Expenditures (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: 78aedd5a-36d1-4d13-8866-5e61a0d63cce
+
+	measure 'Avg Household Expenditures vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Household Expenditures] - [Avg Household Expenditures (Poland)], 
+			    [Avg Household Expenditures (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Living Standards
+		lineageTag: 108b633f-21ca-4290-bd17-7bacddb1b2e0
+
+	measure 'Color Status Household Income' = ```
+			
+			VAR _Trend = [Avg Household Disposable Income YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 5459db2f-b412-4981-9b9e-b47a0b81fff3
+
+	measure 'Color Status Household Expenditures' = ```
+			
+			VAR _Trend = [Avg Household Expenditures YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 689771ab-c942-4975-ad54-cc823e814c95
+
+	measure 'Avg Residential Price per m2' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 633692
+			)
+		displayFolder: Housing Market
+		lineageTag: fdfe0f62-6f87-4d94-ba8d-2ec856b536de
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Residential Price per m2 (Poland)' =
+			
+			CALCULATE(
+			    [Avg Residential Price per m2],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Housing Market
+		lineageTag: d0ebb125-7234-4fd8-b4b1-f0a16e29a335
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Residential Price YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Residential Price per m2]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Residential Price per m2], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 25a70908-70df-440c-bd55-945220d6fa57
+
+	measure 'Avg Residential Price vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Residential Price per m2] - [Avg Residential Price per m2 (Poland)], 
+			    [Avg Residential Price per m2 (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 658541f3-ce09-4a68-b41b-90314ae5b00e
+
+	measure 'Avg Residential Price (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Residential Price per m2 (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Residential Price per m2 (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: a5d5207a-ee33-4071-abfd-7a64371f58ad
+
+	measure 'Total Market Dwellings Sold' = ```
+			
+			CALCULATE(
+			    SUM('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 633617
+			)
+			
+			```
+		displayFolder: Housing Market
+		lineageTag: d02628d6-965e-44e0-a663-ab7c0c55f47a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Market Share %' = ```
+			
+			DIVIDE(
+			    [Total Market Dwellings Sold], 
+			    [Total Dwellings Sold]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 465a3f47-c286-4ec0-9990-8e18574441a5
+
+	measure 'Total Dwellings Sold' =
+			
+			CALCULATE(
+			    SUM('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 633101
+			)
+		displayFolder: Housing Market
+		lineageTag: 3ccfd815-a013-40e0-9306-6b6232a233ef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Market Share % (Poland)' = ```
+			
+			VAR _MarketPoland = 
+			    CALCULATE(
+			        [Total Market Dwellings Sold],
+			        ALL('Dim_Region'),
+			        'Dim_Region'[level_type] = "Country"
+			    )
+			VAR _TotalSoldPoland = 
+			    CALCULATE(
+			        [Total Dwellings Sold],
+			        ALL('Dim_Region'),
+			        'Dim_Region'[level_type] = "Country"
+			    )
+			RETURN 
+			    DIVIDE(_MarketPoland, _TotalSoldPoland)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: c9073eac-56a7-49ce-898e-b07ce9a704d8
+
+	measure 'Total Market Share % vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Total Market Share %] - [Total Market Share % (Poland)], 
+			    [Total Market Share % (Poland)]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 067e0043-6313-40d5-91e8-c348231294d4
+
+	measure 'Total Dwellings Completed' =
+			
+			CALCULATE(
+			    SUM('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 748601
+			)
+		displayFolder: Housing Market
+		lineageTag: 90cf227d-eff7-4e61-84f3-9548610abb1c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Dwellings Completed YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Dwellings Completed]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Dwellings Completed], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 1c408c99-2f0e-4384-bb1a-c6542d04d4e0
+
+	measure 'Avg Dwellings Completed per 1k' = ```
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 747060
+			)
+			
+			```
+		displayFolder: Housing Market
+		lineageTag: aadc92f6-29ad-454a-a3f2-02a40e163b6d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Dwellings Completed per 1k (Poland)' =
+			
+			CALCULATE(
+			    [Avg Dwellings Completed per 1k],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Housing Market
+		lineageTag: e77b43b5-6452-4879-aa3c-c29b94197ea7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Dwellings Completed per 1k YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Dwellings Completed per 1k]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Dwellings Completed per 1k], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 3d98a500-ded8-4820-a017-d63b2baa4263
+
+	measure 'Avg Dwellings Completed per 1k (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Dwellings Completed per 1k (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Dwellings Completed per 1k (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 6437e302-16a9-4cdf-866b-5af65e980c9c
+
+	measure 'Avg Dwellings Completed per 1k vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Dwellings Completed per 1k] - [Avg Dwellings Completed per 1k (Poland)], 
+			    [Avg Dwellings Completed per 1k (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 138b0ce6-a2f0-4718-9828-68409d1326ef
+
+	measure 'Color Status Completion Intensity' = ```
+			
+			VAR _Trend = [Avg Dwellings Completed per 1k YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 00600d69-2810-4eee-a122-de8f8dd8a62f
+
+	measure 'Color Status Market Share' = ```
+			
+			VAR _Value = [Total Market Share %]
+			VAR _Benchmark = [Total Market Share % (Poland)]
+			RETURN 
+			    IF(_Value >= _Benchmark, "#00C805", "#808080")
+			
+			```
+		displayFolder: UI Mapping
+		lineageTag: ca303740-9ccd-4fad-9e97-57bb445c5d6e
+
+	measure 'Total Dwellings Sold (Poland)' =
+			
+			CALCULATE(
+			    [Total Dwellings Sold],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Housing Market
+		lineageTag: 4adaeced-24b5-481d-9bba-589e50b6eb6e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Dwellings Sold (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Dwellings Sold (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Dwellings Sold (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 735e229a-d630-4eb9-b6a7-c4c022441af0
+
+	measure 'Total Dwellings Sold vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Total Dwellings Sold] - [Total Dwellings Sold (Poland)], 
+			    [Total Dwellings Sold (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 61e065e3-a6bc-4a65-9a79-11b69f6dc8e4
+
+	measure 'Total Dwellings Completed (Poland)' =
+			
+			CALCULATE(
+			    [Total Dwellings Completed],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Housing Market
+		lineageTag: fac58e64-92bf-4577-b2c8-ab201d59d1e3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Dwellings Completed (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Dwellings Completed (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Dwellings Completed (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: c5d0c140-d1d4-4e2d-8313-f8b9626afe2f
+
+	measure 'Total Dwellings Completed vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Total Dwellings Completed] - [Total Dwellings Completed (Poland)], 
+			    [Total Dwellings Completed (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 35ee8b65-94c3-4fcc-83cb-ade7eb70a622
+
+	measure 'Total Dwellings Sold YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Dwellings Sold]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Dwellings Sold], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: e2f78380-6528-44df-95d0-c0afc0900bc0
+
+	measure 'Total Market Share % YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Market Share %]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Market Share %], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 66d732db-13dd-42b2-9162-719bc69031dd
+
+	measure 'Total Market Share % (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Market Share % (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Market Share % (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Housing Market
+		lineageTag: 78da4045-01cc-4f3f-a923-63a9d107f858
+
+	measure 'Avg Business Entities per 10k' =
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 60530
+			)
+		displayFolder: Business & Innovation
+		lineageTag: 706e5f6b-5d04-4369-bdf4-d4ea9c43295a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Business Entities per 10k (Poland)' =
+			
+			CALCULATE(
+			    [Avg Business Entities per 10k],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+		displayFolder: Business & Innovation
+		lineageTag: 903e1a77-8a09-4a59-ba3e-ff7a3d18bf9d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Business Entities YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Business Entities per 10k]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Business Entities per 10k], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Business & Innovation
+		lineageTag: 9862293c-f4fe-4838-bc90-3081bb3e2c29
+
+	measure 'Avg Business Entities (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Business Entities per 10k (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Business Entities per 10k (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Business & Innovation
+		lineageTag: 05cc24d8-9741-4f11-8ffe-0960226b9a8e
+
+	measure 'Avg Business Entities vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Business Entities per 10k] - [Avg Business Entities per 10k (Poland)], 
+			    [Avg Business Entities per 10k (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Business & Innovation
+		lineageTag: be577c86-b6f3-4299-98f5-6228df65115f
+
+	measure 'Color Status Business' = ```
+			
+			VAR _Trend = [Avg Business Entities YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			
+			```
+		displayFolder: UI Mapping
+		lineageTag: c47263e3-6333-460e-a782-8ed50e2fb23d
+
+	measure 'Avg Budget Revenue per capita' = ```
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 60508
+			)
+			
+			```
+		displayFolder: Public Finance
+		lineageTag: 230bd33d-b6d1-4e12-91ca-cbb37cf0b5cc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Budget Revenue per capita (Poland)' = ```
+			
+			CALCULATE(
+			    [Avg Budget Revenue per capita],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+			
+			```
+		displayFolder: Public Finance
+		lineageTag: e37e867e-1d62-43ed-b5ee-0fbea393cdd8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Budget Revenue per capita YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Budget Revenue per capita]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Budget Revenue per capita], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: 937f8792-f3ac-42fe-9783-d9298612e31d
+
+	measure 'Avg Budget Revenue per capita (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Budget Revenue per capita (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Budget Revenue per capita (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: 7aa4932c-ea05-4229-8a38-ab10437f0682
+
+	measure 'Avg Budget Revenue per capita vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Budget Revenue per capita] - [Avg Budget Revenue per capita (Poland)], 
+			    [Avg Budget Revenue per capita (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: e2c0da6d-ce17-4b7e-b882-8e578aad5b54
+
+	measure 'Avg Budget Expenditure per capita' = ```
+			
+			CALCULATE(
+			    AVERAGE('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 60518
+			)
+			
+			```
+		displayFolder: Public Finance
+		lineageTag: 9092992d-83cd-425e-971b-38342699e1dc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Budget Expenditure per capita (Poland)' = ```
+			
+			CALCULATE(
+			    [Avg Budget Expenditure per capita],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+			
+			```
+		displayFolder: Public Finance
+		lineageTag: 4bd0699d-1948-4db0-beb4-d301a39544e7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Budget Expenditure per capita YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Budget Expenditure per capita]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Budget Expenditure per capita], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: 94f8cc12-21f0-4066-b9dc-8fe4aabd3603
+
+	measure 'Avg Budget Expenditure per capita (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Avg Budget Expenditure per capita (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Avg Budget Expenditure per capita (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: 16eadb43-9baa-45cc-8ff9-5d1664f0e9cc
+
+	measure 'Avg Budget Expenditure per capita vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Avg Budget Expenditure per capita] - [Avg Budget Expenditure per capita (Poland)], 
+			    [Avg Budget Expenditure per capita (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Public Finance
+		lineageTag: e9f69e8f-825d-461a-84e9-66df4db9a8d3
+
+	measure 'Color Status Budget Revenue' = ```
+			
+			VAR _Trend = [Avg Budget Revenue per capita YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green
+			        _Trend < 0, "#FF0000", -- Red
+			        "#808080"              -- Grey
+			    )
+			
+			```
+		displayFolder: UI Mapping
+		lineageTag: 48f96cbb-47be-450c-af45-44d6f070cf6f
+
+	measure 'Color Status Budget Expenditure' = ```
+			
+			VAR _Trend = [Avg Budget Expenditure per capita YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", 
+			        _Trend < 0, "#FF0000", 
+			        "#808080"
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 17ae7dd8-2e37-438f-8ea2-0a6762e57382
+
+	measure 'Total Population' =
+			
+			CALCULATE(
+			    SUM('Fact_Economics'[value]),
+			    'Fact_Economics'[variable_id] = 72305
+			)
+		formatString: 0
+		displayFolder: Demographics
+		lineageTag: 3d309430-9f5e-4858-a974-357326070256
+
+	measure 'Total Population (Poland)' = ```
+			
+			CALCULATE(
+			    [Total Population],
+			    ALL('Dim_Region'),
+			    'Dim_Region'[level_type] = "Country"
+			)
+			
+			```
+		formatString: 0
+		displayFolder: Demographics
+		lineageTag: 3b4dd00a-29b3-4818-b210-a0208eb8f9d6
+
+	measure 'Total Population YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Population]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Population], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Demographics
+		lineageTag: c70efe8a-c7d4-4649-be4c-e186bb2c41e2
+
+	measure 'Total Population (Poland) YoY %' = ```
+			
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentVal = [Total Population (Poland)]
+			VAR _PrevVal = 
+			    CALCULATE(
+			        [Total Population (Poland)], 
+			        'Dim_Calendar'[year] = _CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Demographics
+		lineageTag: e5c8409f-221c-4e35-81c4-06a7088f2ad9
+
+	measure 'Total Population vs Avg Poland Gap %' = ```
+			
+			DIVIDE(
+			    [Total Population] - [Total Population (Poland)], 
+			    [Total Population (Poland)]
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Demographics
+		lineageTag: 0ba8641e-61c6-4a43-9b0c-7410ced88e73
+
+	measure 'Color Status Population' = ```
+			
+			VAR _Trend = [Total Population YoY %]
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend > 0, "#00C805", -- Green (Growth)
+			        _Trend < 0, "#FF0000", -- Red (Decline)
+			        "#808080"              -- Grey
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 271a3399-2bc8-461d-b899-60be963b1abc
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

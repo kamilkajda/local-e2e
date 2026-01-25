@@ -10,7 +10,7 @@ except ImportError:
 def save_to_azurite(df: DataFrame, metric_name: str, config: dict) -> None:
     """
     Saves DataFrame to local staging and then uploads to Azurite using Python SDK.
-    RENAMES the random Spark parquet file to a static name ('data.parquet') for easy Power BI access via Web connector.
+    RENAMES the random Spark parquet file to a static name ('data.parquet') for easy Power BI access.
     
     :param df: Spark DataFrame to save
     :param metric_name: Name of the metric (used for folder naming)
@@ -44,7 +44,6 @@ def save_to_azurite(df: DataFrame, metric_name: str, config: dict) -> None:
 
         # CLEANUP: Remove old blobs to avoid mixing
         # This ensures we start with a clean slate for this specific metric folder
-        print(f"      [Loader] Cleaning target directory: {metric_name}/...")
         blobs_to_delete = container_client.list_blobs(name_starts_with=f"{metric_name}/")
         for blob in blobs_to_delete:
             container_client.delete_blob(blob.name)
@@ -59,7 +58,7 @@ def save_to_azurite(df: DataFrame, metric_name: str, config: dict) -> None:
                     # we upload it as 'data.parquet'. This gives us a stable URL for Power BI.
                     blob_name = f"{metric_name}/data.parquet"
                     
-                    print(f"      [Loader] Uploading file as: {blob_name}")
+                    # print(f"      [Loader] Uploading file as: {blob_name}")
                     with open(local_file_path, "rb") as data:
                         container_client.upload_blob(name=blob_name, data=data, overwrite=True)
                         

@@ -5,7 +5,7 @@ table Dim_Calendar
 		dataType: int64
 		formatString: 0
 		lineageTag: d49f131e-c3ba-41d3-a1d8-d18d7a512b9d
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: year
 
 		annotation SummarizationSetBy = Automatic
@@ -14,7 +14,7 @@ table Dim_Calendar
 		dataType: int64
 		formatString: 0
 		lineageTag: 4821c258-add2-4477-8fea-f6145062be00
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: decade
 
 		annotation SummarizationSetBy = Automatic
@@ -23,7 +23,7 @@ table Dim_Calendar
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Dim_Calendar/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_calendar/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
 				in
 				    Source
 

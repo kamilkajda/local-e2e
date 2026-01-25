@@ -41,7 +41,6 @@ def search_variables(query):
                 
             all_results.extend(results)
             
-            # Stop if this is the last page
             if len(results) < params['page-size']:
                 break
             
@@ -97,7 +96,6 @@ def check_variable_by_id(var_id):
         response.raise_for_status()
         data = response.json()
         
-        # Extract details
         n1 = data.get('n1', '')
         level_name = " > ".join([data.get(k) for k in ['n5', 'n4', 'n3', 'n2'] if data.get(k)])
         if level_name:
@@ -119,23 +117,15 @@ def check_variable_by_id(var_id):
 if __name__ == "__main__":
     # --- AUTO-DETECT DEV CONFIGURATION PATTERN ---
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)
-    dev_config_path = os.path.join(project_root, "configs", "dev", "settings.json")
-
-    if len(sys.argv) == 1:
-        if os.path.exists(dev_config_path):
-            print(f"--- [DEV MODE AUTO-DETECT] Running standalone. ---")
-    # --- END OF PATTERN ---
-
-    print("-" * 60)
-
-    # --- MODE 1: SEARCH (Uncomment to use) ---
-    search_phrase = "dochody budżetów"
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(script_dir))) 
+    
+    # MODE SWITCH:
+    
+    # 1. Search for a phrase
+    # search_phrase = "nakłady inwestycyjne na 1 mieszkańca"
     # search_variables(search_phrase)
 
-    # --- MODE 2: INSPECT (Uncomment to use) ---
-    # You can add multiple IDs to this list
-    ids_to_check = [60508, 60518]
-    
+    # 2. Inspect specific IDs (Verification of new metrics)
+    ids_to_check = [72305, 748601, 633101, 633617]
     for i in ids_to_check:
         check_variable_by_id(i)

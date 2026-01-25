@@ -3,17 +3,29 @@ table Dim_Region
 
 	column unit_id
 		dataType: string
+		isHidden
 		lineageTag: a738ac6e-8ac9-4cbf-8f3a-b7ee10796f19
 		summarizeBy: none
 		sourceColumn: unit_id
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column unit_name
 		dataType: string
 		lineageTag: 96fe22fb-fd3c-43d3-b13c-ba64ec04be18
+		dataCategory: StateOrProvince
 		summarizeBy: none
 		sourceColumn: unit_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column level_type
+		dataType: string
+		lineageTag: 44e5d739-2617-4589-b291-ab8b213b0a66
+		summarizeBy: none
+		sourceColumn: level_type
 
 		annotation SummarizationSetBy = Automatic
 
@@ -21,7 +33,7 @@ table Dim_Region
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Dim_Region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
 				in
 				    Source
 

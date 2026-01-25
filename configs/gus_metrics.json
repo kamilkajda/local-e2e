@@ -1,36 +1,36 @@
 [
     {
-        "name": "wages",
+        "name": "monthly_gross_wages",
         "variable_id": 64428,
         "description": "Average monthly gross wages and salaries"
     },
     {
-        "name": "unemployment_rate_bael",
-        "variable_id": 450231,
-        "description": "Unemployment rate (BAEL/LFS) - Total"
+        "name": "unemployment_rate_registered",
+        "variable_id": 60270,
+        "description": "Registered unemployment rate (end of year)"
     },
     {
-        "name": "disposable_income_per_capita",
+        "name": "household_disposable_income_per_capita",
         "variable_id": 216968,
-        "description": "Average monthly disposable income per capita"
+        "description": "Average monthly household disposable income per capita"
     },
     {
-        "name": "expenditures_per_capita",
+        "name": "household_expenditures_per_capita",
         "variable_id": 7737,
-        "description": "Average monthly expenditures per capita"
+        "description": "Average monthly household expenditures per capita"
     },
     {
         "name": "gdp_per_capita",
-        "variable_id": 65717,
+        "variable_id": 458421,
         "description": "Gross Domestic Product (GDP) per capita"
     },
     {
-        "name": "investment_outlays_per_capita",
-        "variable_id": 397832,
-        "description": "Investment outlays in enterprises per capita"
+        "name": "investment_outlays_national_economy_per_capita",
+        "variable_id": 60520,
+        "description": "Investment outlays in national economy per capita"
     },
     {
-        "name": "entities_per_10k",
+        "name": "entities_national_economy_per_10k",
         "variable_id": 60530,
         "description": "Entities of national economy per 10k population"
     },
@@ -40,18 +40,38 @@
         "description": "Dwellings completed per 1000 population"
     },
     {
-        "name": "price_per_m2",
+        "name": "residential_price_per_m2",
         "variable_id": 633692,
         "description": "Price of 1 m2 of usable floor area of a residential building"
     },
     {
-        "name": "voivodship_revenue_per_capita",
+        "name": "voivodship_budget_revenue_per_capita",
         "variable_id": 60508,
         "description": "Total revenue of voivodship budgets per capita"
     },
     {
-        "name": "voivodship_expenditure_per_capita",
+        "name": "voivodship_budget_expenditure_per_capita",
         "variable_id": 60518,
         "description": "Current expenditure of voivodship budgets per capita"
+    },
+    {
+        "name": "population_total",
+        "variable_id": 72305,
+        "description": "Total population (actual place of residence)"
+    },
+    {
+        "name": "dwellings_completed_total",
+        "variable_id": 748601,
+        "description": "Dwellings completed (Total count)"
+    },
+    {
+        "name": "dwellings_sold_total",
+        "variable_id": 633101,
+        "description": "Sold residential premises (Total count)"
+    },
+    {
+        "name": "dwellings_sold_market_transactions",
+        "variable_id": 633617,
+        "description": "Sold residential premises (Market transactions count)"
     }
 ]

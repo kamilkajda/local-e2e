@@ -2,7 +2,8 @@
 # Use this to clear "garbage" before a fresh ETL run.
 # NOTE: This does NOT delete data/raw (GUS source files).
 
-$projectRoot = Resolve-Path "$PSScriptRoot\.."
+# Adjusted path for maintenance subfolder (go up 2 levels)
+$projectRoot = Resolve-Path "$PSScriptRoot\..\.."
 $stagingPath = Join-Path $projectRoot "data\staging"
 
 Write-Host "--- CLEANUP TOOL ---" -ForegroundColor Cyan

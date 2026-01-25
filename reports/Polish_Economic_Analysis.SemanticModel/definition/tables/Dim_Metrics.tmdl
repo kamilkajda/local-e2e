@@ -3,10 +3,13 @@ table Dim_Metrics
 
 	column variable_id
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 1c9b8748-3276-4ff4-9a3a-8f5e153de5e7
 		summarizeBy: none
 		sourceColumn: variable_id
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -30,7 +33,7 @@ table Dim_Metrics
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents("http://192.168.0.218:10000/devstoreaccount1/etl-data/Dim_Metrics/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_metrics/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
 				in
 				    Source
 

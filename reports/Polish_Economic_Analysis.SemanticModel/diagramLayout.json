@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 852.38305001469371,
-            "y": 34.422348979922418
+            "x": 387.38305001469371,
+            "y": 0
           },
           "nodeIndex": "Dim_Calendar",
           "nodeLineageTag": "d0e3e26c-6556-44ac-8bfe-a0b8d87cf0ac",
@@ -19,12 +19,12 @@
             "height": 128,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         },
         {
           "location": {
-            "x": 618.38305001469359,
-            "y": -49.999999999999986
+            "x": 737.38305001469359,
+            "y": 7
           },
           "nodeIndex": "Dim_Metrics",
           "nodeLineageTag": "df227e91-afb2-43f4-b481-9de4159f7973",
@@ -32,7 +32,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2
         },
         {
           "location": {
@@ -45,12 +45,12 @@
             "height": 128,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 3
         },
         {
           "location": {
-            "x": 334.20156119318517,
-            "y": -29.155302040155163
+            "x": 395.33333206176758,
+            "y": 328
           },
           "nodeIndex": "Fact_Economics",
           "nodeLineageTag": "6d40c66b-a579-4984-b13d-71d49fb6bec9",
@@ -58,7 +58,20 @@
             "height": 176,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 735.383045246322,
+            "y": 245.00744461020048
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "3d36f44b-41bf-43a1-95bc-c239eadfa8ca",
+          "size": {
+            "height": 366,
+            "width": 234
+          },
+          "zIndex": 5
         }
       ],
       "name": "All tables",

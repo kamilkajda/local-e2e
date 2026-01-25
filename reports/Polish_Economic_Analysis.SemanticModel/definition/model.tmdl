@@ -10,12 +10,13 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["AzuriteUrl","AzuriteBaseUrl","Dim_Calendar","Dim_Metrics","Dim_Region","Fact_Economics"]
+annotation PBI_QueryOrder = ["AzuriteBaseUrl","Dim_Calendar","Dim_Metrics","Dim_Region","Fact_Economics","_Measures"]
 
 ref table Dim_Calendar
 ref table Dim_Metrics
 ref table Dim_Region
 ref table Fact_Economics
+ref table _Measures
 
 ref cultureInfo en-US
 
