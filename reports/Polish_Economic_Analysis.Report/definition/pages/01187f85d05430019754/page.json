@@ -4,5 +4,64 @@
   "displayName": "Executive Summary",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "pageBinding": {
+    "name": "dfaad1e1844883183b6a",
+    "type": "Default",
+    "parameters": [],
+    "acceptsFilterContext": "None"
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F3F4F6'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "5e268047d80d12e02c7e",
+      "target": "30c35129640480ec8021",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5e268047d80d12e02c7e",
+      "target": "b31cc1410120b1646b49",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5e268047d80d12e02c7e",
+      "target": "f26c5860460e50734d70",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5e268047d80d12e02c7e",
+      "target": "cf7d9a57cbbe82175430",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5e268047d80d12e02c7e",
+      "target": "6fe37d255240b5bc840b",
+      "type": "NoFilter"
+    }
+  ]
 }

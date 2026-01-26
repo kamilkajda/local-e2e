@@ -25,6 +25,11 @@
         "description": "Gross Domestic Product (GDP) per capita"
     },
     {
+        "name": "total_gdp",
+        "variable_id": 458271,
+        "description": "Gross Domestic Product (GDP) - current prices (Total)"
+    },
+    {
         "name": "investment_outlays_national_economy_per_capita",
         "variable_id": 60520,
         "description": "Investment outlays in national economy per capita"

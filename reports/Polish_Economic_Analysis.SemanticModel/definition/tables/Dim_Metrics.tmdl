@@ -1,18 +1,6 @@
 table Dim_Metrics
 	lineageTag: df227e91-afb2-43f4-b481-9de4159f7973
 
-	column variable_id
-		dataType: int64
-		isHidden
-		formatString: 0
-		lineageTag: 1c9b8748-3276-4ff4-9a3a-8f5e153de5e7
-		summarizeBy: none
-		sourceColumn: variable_id
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column metric_name
 		dataType: string
 		lineageTag: e6b51ffd-9f07-4399-a6b2-32a2b46cca45
@@ -26,6 +14,15 @@ table Dim_Metrics
 		lineageTag: 836a9b0f-b11a-4ee4-9b6d-8afb87da6504
 		summarizeBy: none
 		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column metric_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a407a29-309e-45ec-bcca-41d107948cdc
+		summarizeBy: none
+		sourceColumn: metric_id
 
 		annotation SummarizationSetBy = Automatic
 

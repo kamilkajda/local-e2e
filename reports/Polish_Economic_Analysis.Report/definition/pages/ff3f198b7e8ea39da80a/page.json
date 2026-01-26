@@ -1,0 +1,77 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "ff3f198b7e8ea39da80a",
+  "displayName": "Duplicate of Executive Summary",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "pageBinding": {
+    "name": "1832ff92ded8ed5ce591",
+    "type": "Default",
+    "parameters": [],
+    "acceptsFilterContext": "None"
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F3F4F6'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "1305d8eb306e2e44dd11",
+      "target": "ad1f3234dd741e9bb7cb",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1305d8eb306e2e44dd11",
+      "target": "e5f3552bde738744e3c1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1305d8eb306e2e44dd11",
+      "target": "896bbe1457e1e9e3cc30",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1305d8eb306e2e44dd11",
+      "target": "4b5e15a2592019aa30ee",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1305d8eb306e2e44dd11",
+      "target": "f5f18ba98d70c58a1c73",
+      "type": "NoFilter"
+    },
+    {
+      "source": "7916f2100547438695ba",
+      "target": "4dcca271b4411833ed08",
+      "type": "NoFilter"
+    },
+    {
+      "source": "4dcca271b4411833ed08",
+      "target": "7916f2100547438695ba",
+      "type": "DataFilter"
+    }
+  ]
+}

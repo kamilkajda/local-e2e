@@ -32,6 +32,7 @@ class GusClient:
     def download_variable(self, variable_id, variable_name, output_base_dir, unit_levels=[0, 2], force=False):
         """
         Downloads data for a specific variable across multiple unit levels.
+        Sets source language to 'pl' for stable metadata mapping.
         """
         target_dir = os.path.join(output_base_dir, variable_name)
         os.makedirs(target_dir, exist_ok=True)
@@ -44,7 +45,8 @@ class GusClient:
 
             print(f"      -> Downloading '{variable_name}' Lvl {level}...")
             endpoint = f"{self.base_url}/data/by-variable/{variable_id}"
-            params = {'unit-level': level, 'page-size': 100, 'format': 'json', 'lang': 'en'}
+            # lang set to 'pl' to ensure we have a stable source for our English translation map
+            params = {'unit-level': level, 'page-size': 100, 'format': 'json', 'lang': 'pl'}
             
             page = 0
             while True:

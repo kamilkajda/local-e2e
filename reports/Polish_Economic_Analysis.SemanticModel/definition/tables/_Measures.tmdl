@@ -5,12 +5,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 64428
+			    'Fact_Economics'[metric_id] = 64428
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Labor Market
 		lineageTag: 17d193e9-71a5-4d1f-a0ac-88ea7fcbd962
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Gross Wage (Poland)' =
 			
@@ -19,10 +20,11 @@ table _Measures
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Labor Market
 		lineageTag: dc1a8add-d3bf-486e-aea4-1bee37b9c9b2
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Gross Wages YoY %' = ```
 			
@@ -73,11 +75,10 @@ table _Measures
 			VAR _Trend = [Avg Gross Wages YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green (Growth is good)
-			        _Trend < 0, "#FF0000", -- Red (Decline is bad)
-			        "#808080"              -- Grey (No change)
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
-			
 			```
 		displayFolder: UI Mapping
 		lineageTag: 1f21ae4a-61f9-4e97-adfa-010ff1e38568
@@ -86,14 +87,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 60270
-			)
+			    'Fact_Economics'[metric_id] = 60270
+			) /100
 			
 			```
+		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: Labor Market
 		lineageTag: b99b3cb7-dd39-4ad0-86ed-74490519be6b
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Avg Unemployment Rate (Poland)' = ```
 			
@@ -101,13 +101,12 @@ table _Measures
 			    [Avg Unemployment Rate],
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
-			)
+			) /100
 			
 			```
+		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: Labor Market
 		lineageTag: f71171a2-23a5-4a11-a2f0-dfe5d9e8faff
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Avg Unemployment YoY %' = ```
 			
@@ -159,9 +158,9 @@ table _Measures
 			VAR _Trend = [Avg Unemployment YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend < 0, "#00C805", -- Green (Decrease is good)
-			        _Trend > 0, "#FF0000", -- Red (Increase is bad)
-			        "#808080"              -- Grey
+			        _Trend <= -0.01, "#00C805", -- Green (Drop is good <= -1%)
+			        _Trend >= 0.01,  "#FF0000", -- Red (Increase is bad >= 1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -171,26 +170,28 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 458421
+			    'Fact_Economics'[metric_id] = 458421
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Economy
 		lineageTag: fc9c7472-aefc-483e-950b-9fe97e9624c4
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
-	measure 'Avg GDP per Capita (Poland)' =
+	measure 'Avg GDP (Poland) per Capita' =
 			
 			CALCULATE(
 			    [Avg GDP per Capita],
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Economy
 		lineageTag: d91dd4b2-b323-4c89-90d7-f39defe5e54d
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
-	measure 'Avg GDP YoY %' = ```
+	measure 'Avg GDP per Capita YoY %' = ```
 			
 			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
 			VAR _CurrentVal = [Avg GDP per Capita]
@@ -206,13 +207,13 @@ table _Measures
 		displayFolder: Economy
 		lineageTag: 044f21f1-2f99-4827-a0db-5a4ec728b809
 
-	measure 'Avg GDP (Poland) YoY %' = ```
+	measure 'Avg GDP (Poland) per Capita YoY %' = ```
 			
 			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
-			VAR _CurrentVal = [Avg GDP per Capita (Poland)]
+			VAR _CurrentVal = [Avg GDP (Poland) per Capita]
 			VAR _PrevVal = 
 			    CALCULATE(
-			        [Avg GDP per Capita (Poland)], 
+			        [Avg GDP (Poland) per Capita], 
 			        'Dim_Calendar'[year] = _CurrentYear - 1
 			    )
 			RETURN 
@@ -222,11 +223,11 @@ table _Measures
 		displayFolder: Economy
 		lineageTag: 207056a9-03b5-420b-a770-b2008c2e0c9a
 
-	measure 'Avg GDP vs Avg Poland Gap %' = ```
+	measure 'Avg GDP per Capita vs Avg Poland Gap %' = ```
 			
 			DIVIDE(
-			    [Avg GDP per Capita] - [Avg GDP per Capita (Poland)], 
-			    [Avg GDP per Capita (Poland)]
+			    [Avg GDP per Capita] - [Avg GDP (Poland) per Capita], 
+			    [Avg GDP (Poland) per Capita]
 			)
 			```
 		formatString: 0.0%;-0.0%;0.0%
@@ -237,12 +238,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 60520
+			    'Fact_Economics'[metric_id] = 60520
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Economy
 		lineageTag: c56a538e-368d-4774-945c-dbf59c113150
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Investment (Poland) per Capita' =
 			
@@ -251,10 +253,11 @@ table _Measures
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Economy
 		lineageTag: d62349b2-a880-4d21-9630-35bca2cc32c8
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Investment YoY %' = ```
 			
@@ -272,7 +275,7 @@ table _Measures
 		displayFolder: Economy
 		lineageTag: 3ee2f1fd-43df-406f-b4a7-adfe4e010e26
 
-	measure 'Avg Investment (Poland) YoY %' = ```
+	measure 'Avg Investment (Poland) per Capita YoY %' = ```
 			
 			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
 			VAR _CurrentVal = [Avg Investment (Poland) per Capita]
@@ -301,12 +304,12 @@ table _Measures
 
 	measure 'Color Status GDP' = ```
 			
-			VAR _Trend = [Avg GDP YoY %]
+			VAR _Trend = [Avg GDP per Capita YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -317,9 +320,9 @@ table _Measures
 			VAR _Trend = [Avg Investment YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -329,12 +332,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 216968
+			    'Fact_Economics'[metric_id] = 216968
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Living Standards
 		lineageTag: 95cc03d9-d7da-45eb-abda-2905d79fdbe2
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Household Disposable Income (Poland)' =
 			
@@ -343,10 +347,11 @@ table _Measures
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Living Standards
 		lineageTag: 5b3e352f-060b-453f-8b99-8629c2c57a59
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Household Disposable Income YoY %' = ```
 			
@@ -395,12 +400,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 7737
+			    'Fact_Economics'[metric_id] = 7737
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Living Standards
 		lineageTag: 0be7c860-db21-440a-8d0f-0017172de529
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Household Expenditures (Poland)' =
 			
@@ -409,10 +415,11 @@ table _Measures
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Living Standards
 		lineageTag: 1b5b0c01-aa92-42a0-bf59-174a0794125e
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Household Expenditures YoY %' = ```
 			
@@ -462,9 +469,9 @@ table _Measures
 			VAR _Trend = [Avg Household Disposable Income YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -475,9 +482,9 @@ table _Measures
 			VAR _Trend = [Avg Household Expenditures YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend <= -0.01, "#00C805", -- Green (Drop is good <= -1%)
+			        _Trend >= 0.01,  "#FF0000", -- Red (Increase is bad >= 1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -487,12 +494,13 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 633692
+			    'Fact_Economics'[metric_id] = 633692
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Housing Market
 		lineageTag: fdfe0f62-6f87-4d94-ba8d-2ec856b536de
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Residential Price per m2 (Poland)' =
 			
@@ -501,10 +509,11 @@ table _Measures
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
 			)
+		formatString: #,0 "PLN"
 		displayFolder: Housing Market
 		lineageTag: d0ebb125-7234-4fd8-b4b1-f0a16e29a335
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Residential Price YoY %' = ```
 			
@@ -553,7 +562,7 @@ table _Measures
 			
 			CALCULATE(
 			    SUM('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 633617
+			    'Fact_Economics'[metric_id] = 633617
 			)
 			
 			```
@@ -578,7 +587,7 @@ table _Measures
 			
 			CALCULATE(
 			    SUM('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 633101
+			    'Fact_Economics'[metric_id] = 633101
 			)
 		displayFolder: Housing Market
 		lineageTag: 3ccfd815-a013-40e0-9306-6b6232a233ef
@@ -621,7 +630,7 @@ table _Measures
 			
 			CALCULATE(
 			    SUM('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 748601
+			    'Fact_Economics'[metric_id] = 748601
 			)
 		displayFolder: Housing Market
 		lineageTag: 90cf227d-eff7-4e61-84f3-9548610abb1c
@@ -648,7 +657,7 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 747060
+			    'Fact_Economics'[metric_id] = 747060
 			)
 			
 			```
@@ -718,9 +727,9 @@ table _Measures
 			VAR _Trend = [Avg Dwellings Completed per 1k YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -871,7 +880,7 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 60530
+			    'Fact_Economics'[metric_id] = 60530
 			)
 		displayFolder: Business & Innovation
 		lineageTag: 706e5f6b-5d04-4369-bdf4-d4ea9c43295a
@@ -940,9 +949,9 @@ table _Measures
 			VAR _Trend = [Avg Business Entities YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			
 			```
@@ -953,14 +962,15 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 60508
+			    'Fact_Economics'[metric_id] = 60508
 			)
 			
 			```
+		formatString: #,0 "PLN"
 		displayFolder: Public Finance
 		lineageTag: 230bd33d-b6d1-4e12-91ca-cbb37cf0b5cc
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Budget Revenue per capita (Poland)' = ```
 			
@@ -971,10 +981,11 @@ table _Measures
 			)
 			
 			```
+		formatString: #,0 "PLN"
 		displayFolder: Public Finance
 		lineageTag: e37e867e-1d62-43ed-b5ee-0fbea393cdd8
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Budget Revenue per capita YoY %' = ```
 			
@@ -1025,14 +1036,15 @@ table _Measures
 			
 			CALCULATE(
 			    AVERAGE('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 60518
+			    'Fact_Economics'[metric_id] = 60518
 			)
 			
 			```
+		formatString: #,0 "PLN"
 		displayFolder: Public Finance
 		lineageTag: 9092992d-83cd-425e-971b-38342699e1dc
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Budget Expenditure per capita (Poland)' = ```
 			
@@ -1043,10 +1055,11 @@ table _Measures
 			)
 			
 			```
+		formatString: #,0 "PLN"
 		displayFolder: Public Finance
 		lineageTag: 4bd0699d-1948-4db0-beb4-d301a39544e7
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		annotation PBI_FormatHint = {"isCustom":true}
 
 	measure 'Avg Budget Expenditure per capita YoY %' = ```
 			
@@ -1099,9 +1112,9 @@ table _Measures
 			VAR _Trend = [Avg Budget Revenue per capita YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green
-			        _Trend < 0, "#FF0000", -- Red
-			        "#808080"              -- Grey
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			
 			```
@@ -1113,9 +1126,9 @@ table _Measures
 			VAR _Trend = [Avg Budget Expenditure per capita YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", 
-			        _Trend < 0, "#FF0000", 
-			        "#808080"
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
@@ -1125,9 +1138,9 @@ table _Measures
 			
 			CALCULATE(
 			    SUM('Fact_Economics'[value]),
-			    'Fact_Economics'[variable_id] = 72305
+			    'Fact_Economics'[metric_id] = 72305
 			)
-		formatString: 0
+		formatString: #,0
 		displayFolder: Demographics
 		lineageTag: 3d309430-9f5e-4858-a974-357326070256
 
@@ -1193,13 +1206,114 @@ table _Measures
 			VAR _Trend = [Total Population YoY %]
 			RETURN 
 			    SWITCH( TRUE(),
-			        _Trend > 0, "#00C805", -- Green (Growth)
-			        _Trend < 0, "#FF0000", -- Red (Decline)
-			        "#808080"              -- Grey
+			        _Trend > 0,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend < 0, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral / Minimal change)
 			    )
 			```
 		displayFolder: UI Mapping
 		lineageTag: 271a3399-2bc8-461d-b899-60be963b1abc
+
+	measure 'Total GDP' = ```
+			
+			CALCULATE ( 
+			    SUM ( 'Fact_Economics'[value] ), 
+			    'Fact_Economics'[metric_id] = 458271 
+			)
+			```
+		formatString: #,0 "PLN"
+		displayFolder: Economy
+		lineageTag: cdfb29d6-6231-4a3d-a01a-c3a0e4d1a79e
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Total GDP (Poland)' = ```
+			
+			CALCULATE ( 
+			    [Total GDP], 
+			    ALL ( 'Dim_Region' ), 
+			    'Dim_Region'[level_type] = "Country" 
+			)
+			```
+		formatString: #,0 "PLN"
+		displayFolder: Economy
+		lineageTag: cc4af48c-7c2e-4008-8ff8-ef0a15b81831
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Total GDP YoY %' = ```
+			
+			VAR _MaxYear = MAX ( 'Dim_Calendar'[year] )
+			VAR _Current = [Total GDP]
+			VAR _Prev = 
+			    CALCULATE ( 
+			        [Total GDP], 
+			        'Dim_Calendar'[year] = _MaxYear - 1 
+			    )
+			RETURN 
+			    DIVIDE ( _Current - _Prev, _Prev )
+			```
+		displayFolder: Economy
+		lineageTag: f969e819-36b5-45a2-b2f9-a74da719962b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total GDP (Poland) YoY %' = ```
+			
+			VAR _MaxYear = MAX ( 'Dim_Calendar'[year] )
+			VAR _Current = [Total GDP (Poland)]
+			VAR _Prev = 
+			    CALCULATE ( 
+			        [Total GDP (Poland)], 
+			        'Dim_Calendar'[year] = _MaxYear - 1 
+			    )
+			RETURN 
+			    DIVIDE ( _Current - _Prev, _Prev )
+			```
+		displayFolder: Economy
+		lineageTag: 15c85ab9-1c8e-4147-b8e7-3b426486dc6d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total GDP vs Poland Gap %' = ```
+			
+			DIVIDE ( 
+			    [Total GDP] - [Total GDP (Poland)], 
+			    [Total GDP (Poland)] 
+			)
+			```
+		displayFolder: Economy
+		lineageTag: cf8fab4c-489a-435f-a668-4b1ef1829170
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Color Status Total GDP' = ```
+			
+			VAR _Trend = [Total GDP YoY %] 
+			RETURN 
+			    SWITCH( TRUE(),
+			        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+			        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+			        "#6B7280"                   -- Grey (Neutral/Stable)
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: 07b43f8c-d9cc-4e84-a67b-46c97d592914
+
+	measure 'Selected Year' = SELECTEDVALUE('Dim_Calendar'[year])
+		formatString: 0
+		displayFolder: Title
+		lineageTag: 87322d11-6002-4e08-8a96-a15268e5140a
+
+	measure 'Selected Region' = SELECTEDVALUE('Dim_Region'[region], "NATIONAL")
+		displayFolder: Title
+		lineageTag: b8eebf7d-7b65-42ba-bbfd-15b8b6593dca
+
+	measure 'Report Title Dynamic' =
+			
+			[Selected Region] & " (" & [Selected Year] & ")"
+		displayFolder: Title
+		lineageTag: 933a4df3-8be9-4462-8d76-91ef62735a54
 
 	partition _Measures = m
 		mode: import

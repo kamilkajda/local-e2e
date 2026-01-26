@@ -2,176 +2,160 @@ import os
 
 def generate_documentation():
     """
-    Generates the master documentation for Power BI measures (Blueprint).
-    Ensures naming consistency and clear logic for the entire project.
+    Generates the master documentation (pbi_advanced_measures.md) 
+    for all Power BI measures, ensuring a single source of truth.
     """
-    # 1. Path resolution (handles the project structure)
+    # Path resolution
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Go up 3 levels: exploration/tools/ -> exploration/ -> project_root/
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(script_dir)))
+    project_root = os.path.dirname(os.path.dirname(script_dir))
     docs_dir = os.path.join(project_root, "docs")
     file_path = os.path.join(docs_dir, "pbi_advanced_measures.md")
 
-    # 2. Create docs directory if it doesn't exist
     if not os.path.exists(docs_dir):
         os.makedirs(docs_dir)
-        print(f"Created directory: {docs_dir}")
 
-    # 3. Define content (Professional English Documentation)
-    content = """# Power BI Master Measures Blueprint & Development Process
+    # Master Content in English
+    content = """# Power BI Master Measures Blueprint
 
 This document defines the standards for creating DAX measures and the analytical business logic within the Polish Economic Analysis project.
 
-## 1. Metric Development Workflow
+## 1. Global Standards & UI Logic
 
-To maintain report consistency, every new data point follows this process:
-1. **GUS Discovery:** Identify the `variable_id` manually (e.g., via the BDL portal) and verify the unit of measure.
-2. **ETL Integration:** Add the ID and metadata to `configs/gus_metrics.json` and run `scripts/run_etl_dev.ps1`.
-3. **Semantic Layer:** Implement the standardized 5-measure pattern in Power BI within the appropriate Display Folder.
-4. **UI Branding:** Apply conditional formatting using dedicated Status Color measures in the `UI Mapping` folder.
+### Naming Convention
+* **Avg [Metric]**: Used for rates, ratios, and per capita values (e.g., Avg Gross Wage).
+* **Total [Metric]**: Used for absolute counts and sums (e.g., Total Population, Total GDP).
+* **[Metric] (Poland)**: National benchmark using `level_type = "Country"`.
+* **[Metric] YoY %**: Year-over-Year growth for the selected region.
+* **[Metric] (Poland) YoY %**: Year-over-Year growth for the national benchmark.
+* **[Metric] vs Poland Gap %**: Relative difference between selection and benchmark.
 
----
-
-## 2. Global Naming Standards
-
-* **Avg [Metric Name]**: Used for rates, ratios, and averages (e.g., Price per m2, Unemployment).
-* **Total [Metric Name]**: Used for absolute counts and sums (e.g., Population, Dwellings Sold).
-* **[Metric] (Poland)**: National benchmark (Level 0).
-* **[Metric] YoY %**: Regional Year-over-Year growth.
-* **[Metric] (Poland) YoY %**: National Year-over-Year growth.
-* **[Metric] vs Avg Poland Gap %**: Relative difference between region and national benchmark.
+### UI Color Logic (Status Colors)
+* **Higher is Better (1% Threshold):** Grey zone between -1% and +1%. Used for Wages, GDP, Income, Investment, Entities, Housing Prices, Sales, Revenue.
+* **Lower is Better (1% Threshold):** Grey zone between -1% and +1%. Used for Unemployment Rate, Expenditures, Budget Expenditure.
+* **Population (Zero Tolerance):** Green for any growth (>0), Red for any decline (<0).
 
 ---
 
-## 3. Standard 5-Measure Pattern (Example: Gross Wages)
-**Display Folder:** `Labor Market`
+## 2. Global Measures (Navigation & Header)
 
-### [A] Base Metric (ID: 64428)
+### [A] Dynamic Report Title
 ```dax
-Avg Gross Wage = 
-CALCULATE(
-    AVERAGE('Fact_Economics'[value]),
-    'Fact_Economics'[variable_id] = 64428
-)
+-- Get currently selected year from Slicer
+Selected Year = SELECTEDVALUE('Dim_Calendar'[year])
+
+-- Get currently selected region from Slicer (Defaults to NATIONAL)
+Selected Region = SELECTEDVALUE('Dim_Region'[unit_name_en], "NATIONAL")
+
+-- Final Dynamic Title for the Header Card
+Report Title Dynamic = 
+"POLAND: ECONOMIC PULSE - " & [Selected Region] & " (" & [Selected Year] & ")"
 ```
 
-### [B] National Benchmark (Poland Total)
+---
+
+## 3. Metric Inventory (Variable Mapping)
+
+| Display Folder | Metric Name | GUS ID | Aggregation | Color Logic |
+| :--- | :--- | :--- | :--- | :--- |
+| **Labor Market** | Avg Gross Wage | 64428 | AVERAGE | Higher is Better |
+| **Labor Market** | Unemployment Rate | 60270 | AVERAGE | Lower is Better |
+| **Living Standards** | Avg Disposable Income | 216968 | AVERAGE | Higher is Better |
+| **Living Standards** | Avg Expenditures | 7737 | AVERAGE | Lower is Better |
+| **Economy** | Total GDP | 458271 | SUM | Higher is Better |
+| **Economy** | GDP per Capita | 458421 | AVERAGE | Higher is Better |
+| **Economy** | Investment per Capita | 60520 | AVERAGE | Higher is Better |
+| **Business & Innovation**| Entities per 10k Pop | 60530 | AVERAGE | Higher is Better |
+| **Housing Market** | Price per m2 (Residential)| 633692 | AVERAGE | Higher is Better |
+| **Housing Market** | Dwellings per 1k Pop | 747060 | AVERAGE | Higher is Better |
+| **Housing Market** | Completed Dwellings | 748601 | SUM | Higher is Better |
+| **Housing Market** | Total Dwellings Sold | 633101 | SUM | Higher is Better |
+| **Housing Market** | Market Dwellings Sold | 633617 | SUM | Higher is Better |
+| **Public Finance** | Budget Revenue | 60508 | AVERAGE | Higher is Better |
+| **Public Finance** | Budget Expenditure | 60518 | AVERAGE | Lower is Better |
+| **Demographics** | Total Population | 72305 | SUM | Population (ZT) |
+
+---
+
+## 4. Master DAX Blueprints
+
+### 4.1 The 5-Measure Pattern (Example: Total GDP)
 ```dax
-Avg Gross Wage (Poland) = 
-CALCULATE(
-    [Avg Gross Wage],
-    ALL('Dim_Region'),
-    'Dim_Region'[level_type] = "Country"
-)
+-- 1. Base Metric
+Total GDP = CALCULATE(SUM(Fact_Economics[value]), Fact_Economics[variable_id] = 458271)
+
+-- 2. National Benchmark
+Total GDP (Poland) = CALCULATE([Total GDP], ALL(Dim_Region), Dim_Region[level_type] = "Country")
+
+-- 3. Regional YoY %
+Total GDP YoY % = 
+VAR _MaxYear = MAX('Dim_Calendar'[year])
+VAR _Current = [Total GDP]
+VAR _Prev = CALCULATE([Total GDP], 'Dim_Calendar'[year] = _MaxYear - 1)
+RETURN DIVIDE(_Current - _Prev, _Prev)
+
+-- 4. National YoY %
+Total GDP (Poland) YoY % = 
+VAR _MaxYear = MAX('Dim_Calendar'[year])
+VAR _Current = [Total GDP (Poland)]
+VAR _Prev = CALCULATE([Total GDP (Poland)], 'Dim_Calendar'[year] = _MaxYear - 1)
+RETURN DIVIDE(_Current - _Prev, _Prev)
+
+-- 5. Performance Gap %
+Total GDP vs Poland Gap % = DIVIDE([Total GDP] - [Total GDP (Poland)], [Total GDP (Poland)])
 ```
 
-### [C] Regional Growth (YoY %)
+### 4.2 Unemployment Rate Percentage Fix
 ```dax
-Avg Gross Wage YoY % = 
-VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
-VAR _CurrentVal = [Avg Gross Wage]
-VAR _PrevVal = 
-    CALCULATE(
-        [Avg Gross Wage], 
-        'Dim_Calendar'[year] = _CurrentYear - 1
-    )
-RETURN 
-    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
-```
-
-### [D] National Growth (YoY %)
-```dax
-Avg Gross Wage (Poland) YoY % = 
-VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
-VAR _CurrentVal = [Avg Gross Wage (Poland)]
-VAR _PrevVal = 
-    CALCULATE(
-        [Avg Gross Wage (Poland)], 
-        'Dim_Calendar'[year] = _CurrentYear - 1
-    )
-RETURN 
-    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
-```
-
-### [E] Performance Gap vs. National Average
-```dax
-Avg Gross Wage vs Avg Poland Gap % = 
+Avg Unemployment Rate = 
 DIVIDE(
-    [Avg Gross Wage] - [Avg Gross Wage (Poland)], 
-    [Avg Gross Wage (Poland)]
+    CALCULATE(AVERAGE(Fact_Economics[value]), Fact_Economics[variable_id] = 60270),
+    100
 )
 ```
 
 ---
 
-## 4. UI Formatting Logic (Folder: UI Mapping)
+## 5. UI Status Colors (Conditional Formatting)
 
-### Status Colors (Higher is Better)
-*Used for Wages, Household Income, GDP, etc.*
+### A. UI Color - Higher is Better (1% Threshold)
 ```dax
-Color Status Positive = 
-VAR _Trend = [Selected Metric YoY %]
+UI Color - Higher is Better = 
+VAR _Trend = [Target YoY %] -- Replace with specific YoY measure
 RETURN 
     SWITCH( TRUE(),
-        _Trend > 0, "#00C805", -- Green
-        _Trend < 0, "#FF0000", -- Red
-        "#808080"              -- Grey
+        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
+        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
+        "#6B7280"                   -- Grey (Neutral)
     )
 ```
 
-### Status Colors (Lower is Better)
-*Used for Unemployment Rate.*
+### B. UI Color - Lower is Better (1% Threshold)
 ```dax
-Color Status Unemployment = 
-VAR _Trend = [Avg Unemployment Rate YoY %]
+UI Color - Lower is Better = 
+VAR _Trend = [Target YoY %] -- Replace with specific YoY measure
 RETURN 
     SWITCH( TRUE(),
-        _Trend < 0, "#00C805", -- Green (Drop is good)
-        _Trend > 0, "#FF0000", -- Red (Increase is bad)
-        "#808080"              -- Grey
+        _Trend <= -0.01, "#00C805", -- Green (Drop is good)
+        _Trend >= 0.01,  "#FF0000", -- Red (Increase is bad)
+        "#6B7280"                   -- Grey (Neutral)
     )
 ```
 
----
-
-## 5. Business Logic: Real Estate Market
-
-In real estate analysis, it is critical to distinguish between "Total Sales" and "Market Transactions."
-
-* **Total Dwellings Sold (633101):** Includes all ownership changes (subsidized buyouts, donations, etc.).
-* **Total Market Dwellings Sold (633617):** Includes only arms-length transactions on the open market.
-* **Total Market Share %:** `DIVIDE([Total Market Dwellings Sold], [Total Dwellings Sold])`. A high ratio suggests a region is attractive for private investment and developers.
-
----
-
-## 6. Data Source & Inventory
-
-| Display Folder | Professional Metric Name | Variable ID | Calculation |
-| :--- | :--- | :--- | :--- |
-| **Labor Market** | Avg Gross Wage | 64428 | AVERAGE |
-| **Labor Market** | Avg Unemployment Rate | 60270 | AVERAGE |
-| **Living Standards** | Avg Household Disposable Income | 216968 | AVERAGE |
-| **Living Standards** | Avg Household Expenditures | 7737 | AVERAGE |
-| **Economy** | Avg GDP per Capita | 458421 | AVERAGE |
-| **Economy** | Avg Investment per Capita | 60520 | AVERAGE |
-| **Business & Innovation** | Avg Business Entities per 10k | 60530 | AVERAGE |
-| **Housing Market** | Avg Residential Price per m2 | 633692 | AVERAGE |
-| **Housing Market** | Avg Dwellings Completed per 1k | 747060 | AVERAGE |
-| **Housing Market** | Total Dwellings Completed | 748601 | SUM |
-| **Housing Market** | Total Dwellings Sold | 633101 | SUM |
-| **Housing Market** | Total Market Dwellings Sold | 633617 | SUM |
-| **Public Finance** | Avg Budget Revenue per capita | 60508 | AVERAGE |
-| **Public Finance** | Avg Budget Expenditure per capita | 60518 | AVERAGE |
-| **Demographics** | Total Population | 72305 | SUM |
+### C. UI Color - Population (Zero Tolerance)
+```dax
+UI Color - Population = 
+VAR _Trend = [Total Population YoY %]
+RETURN 
+    IF(_Trend > 0, "#00C805", "#FF0000")
+```
 """
 
-    # 4. Write to file with UTF-8 encoding
     try:
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-        print(f"Document updated successfully: {file_path}")
+        print(f"   [Docs] Master measures documentation generated: {file_path}")
     except Exception as e:
-        print(f"Error writing file: {e}")
+        print(f"   [Error] Failed to write documentation: {e}")
 
 if __name__ == "__main__":
     generate_documentation()

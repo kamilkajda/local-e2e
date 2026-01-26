@@ -37,6 +37,17 @@
           "type": "BaseTheme"
         }
       ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "poland_regions03558501462324959.json",
+          "path": "poland_regions03558501462324959.json",
+          "type": "ShapeMap"
+        }
+      ]
     }
   ],
   "settings": {

@@ -1,17 +1,6 @@
 table Fact_Economics
 	lineageTag: 6d40c66b-a579-4984-b13d-71d49fb6bec9
 
-	column unit_id
-		dataType: string
-		isHidden
-		lineageTag: ad0c5472-3ca7-488f-8241-2a17f051e057
-		summarizeBy: none
-		sourceColumn: unit_id
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column year
 		dataType: int64
 		formatString: 0
@@ -31,23 +20,23 @@ table Fact_Economics
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column variable_id
+	column region_id
 		dataType: int64
-		isHidden
 		formatString: 0
-		lineageTag: 86c83d95-fe6c-4b61-a1a7-aa49dc7516d3
+		lineageTag: 81ea5b26-4328-4988-92e6-51fb03c39aca
 		summarizeBy: none
-		sourceColumn: variable_id
+		sourceColumn: region_id
 
-		changedProperty = IsHidden
+		changedProperty = DataType
 
 		annotation SummarizationSetBy = Automatic
 
-	column unit_name
-		dataType: string
-		lineageTag: 3791a711-9c91-444f-a77b-2431ed925cfb
+	column metric_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d476a152-d525-4c76-a09e-e8511e1d0e8a
 		summarizeBy: none
-		sourceColumn: unit_name
+		sourceColumn: metric_id
 
 		annotation SummarizationSetBy = Automatic
 

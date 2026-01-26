@@ -1,12 +1,12 @@
-relationship AutoDetected_45d972df-2e3c-4ab9-bb8d-8f854a9bb074
-	fromColumn: Fact_Economics.variable_id
-	toColumn: Dim_Metrics.variable_id
-
-relationship AutoDetected_1f4883b1-f257-4b31-a766-41837a25c057
-	fromColumn: Fact_Economics.unit_id
-	toColumn: Dim_Region.unit_id
-
 relationship 696f381d-bb59-e06e-8c6b-3ea69019c0ee
 	fromColumn: Fact_Economics.year
 	toColumn: Dim_Calendar.year
+
+relationship AutoDetected_12a67a19-741a-4895-bab3-896ae97a0c19
+	fromColumn: Fact_Economics.metric_id
+	toColumn: Dim_Metrics.metric_id
+
+relationship AutoDetected_064006aa-9104-4eaa-a11f-99b22d1c031a
+	fromColumn: Fact_Economics.region_id
+	toColumn: Dim_Region.region_id
 

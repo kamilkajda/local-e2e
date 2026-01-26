@@ -1,31 +1,53 @@
 table Dim_Region
 	lineageTag: 5fe1b65b-4b71-46d0-883b-f58b77c852e2
 
-	column unit_id
-		dataType: string
-		isHidden
-		lineageTag: a738ac6e-8ac9-4cbf-8f3a-b7ee10796f19
-		summarizeBy: none
-		sourceColumn: unit_id
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column unit_name
-		dataType: string
-		lineageTag: 96fe22fb-fd3c-43d3-b13c-ba64ec04be18
-		dataCategory: StateOrProvince
-		summarizeBy: none
-		sourceColumn: unit_name
-
-		annotation SummarizationSetBy = Automatic
-
 	column level_type
 		dataType: string
 		lineageTag: 44e5d739-2617-4589-b291-ab8b213b0a66
 		summarizeBy: none
 		sourceColumn: level_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column sort_order
+		dataType: int64
+		formatString: 0
+		lineageTag: b7a94909-1e3e-47a0-9317-b97bb427e1bf
+		summarizeBy: none
+		sourceColumn: sort_order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column region_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 58ff02fe-9d6b-4ba9-aae6-e6a6a4089c88
+		summarizeBy: none
+		sourceColumn: region_id
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column region_source
+		dataType: string
+		lineageTag: 93838865-3e68-4cc4-b834-6ac692cce465
+		summarizeBy: none
+		sourceColumn: region_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: e242dbd4-a4cf-447f-ac00-7caeff8c7475
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: region
+		sortByColumn: sort_order
+
+		changedProperty = SortByColumn
 
 		annotation SummarizationSetBy = Automatic
 
