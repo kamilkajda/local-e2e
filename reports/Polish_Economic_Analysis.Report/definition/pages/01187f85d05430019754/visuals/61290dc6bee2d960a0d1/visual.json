@@ -6,8 +6,7 @@
     "y": 30.038143674507307,
     "z": 3000,
     "height": 36.125874125874113,
-    "width": 178.06451612903223,
-    "tabOrder": 1000
+    "width": 178.06451612903223
   },
   "visual": {
     "visualType": "card",
@@ -147,23 +146,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "5bc9af73033000513828",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "2f4b5fb4ed8b0a03b6e0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Unemployment Rate"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "5bc9af73033000513828"
 }

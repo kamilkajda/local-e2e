@@ -1,13 +1,14 @@
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
+from pyspark.sql.window import Window
 from pyspark.sql.types import IntegerType, StringType, StructType, StructField
 import datetime
 import os
 
 def flatten_gus_data(df: DataFrame) -> DataFrame:
     """
-    Explodes the nested GUS JSON structure into a flat format using the new schema names.
-    Note: region_source is kept here to allow building the regions dimension later.
+    Explodes the nested GUS JSON structure. 
+    Added 'attr_id' to distinguish real zeros from data gaps/confidentiality.
     """
     df_units = df.select(F.explode(F.col("results")).alias("unit"))
     df_flat = df_units.select(
@@ -19,15 +20,40 @@ def flatten_gus_data(df: DataFrame) -> DataFrame:
         F.col("region_id"),
         F.col("region_source"),
         F.col("val_obj.year").cast(IntegerType()).alias("year"),
-        F.col("val_obj.val").cast("double").alias("value")
+        F.col("val_obj.val").cast("double").alias("value"),
+        F.col("val_obj.attrId").cast(IntegerType()).alias("attr_id")
     )
+
+def impute_missing_values(df: DataFrame) -> DataFrame:
+    """
+    Performs linear interpolation for missing/confidential data (attr_id != 1).
+    Fills 0.0 values with the average of the preceding and succeeding years.
+    Drops internal helper columns (including attr_id) before returning.
+    """
+    # Define window: partition by region and metric, order by year
+    window_spec = Window.partitionBy("region_id", "metric_id").orderBy("year")
+    
+    # Get neighbors
+    df_neighbors = df.withColumn("prev_val", F.lag("value").over(window_spec)) \
+                     .withColumn("next_val", F.lead("value").over(window_spec))
+    
+    # Logic: If value is 0.0 and NOT Final (attr_id != 1), use average of neighbors
+    df_imputed = df_neighbors.withColumn("value", 
+        F.when(
+            ((F.col("value") == 0.0) | (F.col("value").isNull())) & (F.col("attr_id") != 1),
+            (F.col("prev_val") + F.col("next_val")) / 2
+        ).otherwise(F.col("value"))
+    )
+    
+    # Clean up: remove internal columns used for calculation
+    return df_imputed.drop("prev_val", "next_val", "attr_id")
 
 def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
     """
-    Orchestrates processing of all fact metrics into a unified table with metric_id.
+    Orchestrates processing. Includes global data imputation (interpolation).
     """
     all_facts = []
-    print("   [Transformer] Processing metrics into facts (Metric ID Schema)...")
+    print("   [Transformer] Processing metrics into facts...")
     
     for metric in metrics:
         if not metric.get('variable_id'): continue
@@ -39,7 +65,6 @@ def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
             if df_raw.rdd.isEmpty(): continue
             
             df_flat = flatten_gus_data(df_raw)
-            # Assign metric_id from variable_id in config
             df_with_id = df_flat.withColumn("metric_id", F.lit(int(metric['variable_id'])))
             all_facts.append(df_with_id)
         except Exception:
@@ -49,14 +74,17 @@ def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
         return None
         
     from functools import reduce
-    return reduce(DataFrame.unionByName, all_facts)
+    df_combined = reduce(DataFrame.unionByName, all_facts)
+    
+    # Apply global interpolation for gaps
+    print("   [Transformer] Applying global data imputation (Interpolation for gaps)...")
+    return impute_missing_values(df_combined)
 
 def create_regions_dimension(df_all_facts: DataFrame) -> DataFrame:
     """
-    Creates Regions Dimension. Renames 'POLSKA' to 'NATIONAL' in the primary 'region' column.
+    Creates Regions Dimension. Renames 'POLSKA' to 'NATIONAL'.
     """
-    print("   [Transformer] Creating Regions Dim (region & region_id schema)...")
-    
+    print("   [Transformer] Creating Regions Dim...")
     df_regions = df_all_facts.select("region_id", "region_source").distinct()
     
     return df_regions.withColumn(
@@ -74,7 +102,7 @@ def create_regions_dimension(df_all_facts: DataFrame) -> DataFrame:
 
 def create_metrics_dimension(spark: SparkSession, metrics_list: list) -> DataFrame:
     """
-    Converts metrics configuration into a formal dimension table with metric_id.
+    Converts metrics configuration into a formal dimension table.
     """
     schema = StructType([
         StructField("metric_id", IntegerType(), True),

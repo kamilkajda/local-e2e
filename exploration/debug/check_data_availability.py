@@ -2,10 +2,10 @@ import sys
 import os
 import json
 import glob
+from collections import defaultdict
 
 # --- ENVIRONMENT SETUP ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# Go up 2 levels: exploration/debug -> exploration -> project_root
 project_root = os.path.dirname(os.path.dirname(current_dir))
 sys.path.append(os.path.join(project_root, 'src', 'pyspark'))
 
@@ -15,17 +15,20 @@ except ImportError as e:
     print(f"Error importing modules: {e}")
     sys.exit(1)
 
-def check_data_ranges():
-    print("--- RAW DATA AVAILABILITY CHECK (JSON) ---")
+def check_detailed_availability():
+    """
+    Scans raw JSON files and identifies data gaps per region (voivodeship).
+    Flags missing years for specific regions compared to the metric's global year set.
+    """
+    print("--- RAW DATA REGIONAL GAP ANALYSIS ---")
 
-    # 1. Load Config to find data path
+    # 1. Load Config
     config_path = os.path.join(project_root, "configs", "dev", "settings.json")
     if not os.path.exists(config_path):
         print(f"[!] Config not found at {config_path}")
         return
         
     config = load_config(config_path)
-    # Ensure raw_data_dir is absolute
     raw_data_dir = os.path.abspath(os.path.join(project_root, config['paths']['raw']))
     
     # 2. Load Metrics Definition
@@ -33,23 +36,21 @@ def check_data_ranges():
     with open(metrics_path, 'r', encoding='utf-8') as f:
         metrics = json.load(f)
 
-    print(f"\nScanning directory: {raw_data_dir}")
-    print(f"{'METRIC NAME':<45} | {'MIN YEAR':<10} | {'MAX YEAR':<10} | {'RECORDS':<10}")
-    print("-" * 85)
+    print(f"\nScanning: {raw_data_dir}")
+    print("-" * 100)
 
-    # 3. Iterate and Check Local Files
+    # 3. Check Files Metric by Metric
     for metric in metrics:
         name = metric['name']
         metric_dir = os.path.join(raw_data_dir, name)
         
-        years = []
-        record_count = 0
+        # Structure: { region_name: set(years) }
+        region_years = defaultdict(set)
+        global_years = set()
         
-        # Find all JSON files for this metric
         json_files = glob.glob(os.path.join(metric_dir, "*.json"))
         
         if not json_files:
-            print(f"{name:<45} | {'NO FILES':<34}")
             continue
             
         for json_file in json_files:
@@ -59,23 +60,40 @@ def check_data_ranges():
                     results = data.get('results', [])
                     
                     for unit in results:
-                        # GUS Structure: results -> values -> year
+                        reg_name = unit.get('name', 'Unknown')
                         values = unit.get('values', [])
-                        record_count += len(values)
                         for val in values:
                             y = val.get('year')
                             if y:
-                                years.append(int(y))
+                                y_int = int(y)
+                                region_years[reg_name].add(y_int)
+                                global_years.add(y_int)
                                 
-            except Exception as e:
-                print(f"[!] Error reading {os.path.basename(json_file)}: {e}")
+            except Exception:
+                pass
 
-        if years:
-            min_y = min(years)
-            max_y = max(years)
-            print(f"{name:<45} | {min_y:<10} | {max_y:<10} | {record_count:<10}")
+        if global_years:
+            print(f"\n[METRIC] {name.upper()}")
+            sorted_global = sorted(list(global_years))
+            print(f"Global Year Set: {min(sorted_global)} - {max(sorted_global)}")
+            
+            # Check each region against the global set
+            gaps_found = False
+            for reg, years in sorted(region_years.items()):
+                missing = global_years - years
+                if missing:
+                    gaps_found = True
+                    missing_str = ", ".join(map(str, sorted(list(missing))))
+                    print(f"   [!] GAP FOUND: {reg:<20} | Missing: {missing_str}")
+                else:
+                    # Optional: print OK for specific debugging if needed
+                    # print(f"   [OK] {reg:<20}")
+                    pass
+            
+            if not gaps_found:
+                print("   [OK] No regional gaps found. All regions have consistent year sets.")
         else:
-            print(f"{name:<45} | {'EMPTY':<34}")
+            print(f"\n[METRIC] {name.upper()} | NO DATA")
 
 if __name__ == "__main__":
-    check_data_ranges()
+    check_detailed_availability()

@@ -6,8 +6,7 @@
     "y": 30.038143674507307,
     "z": 3000,
     "height": 36.125874125874113,
-    "width": 178.06451612903223,
-    "tabOrder": 1000
+    "width": 178.06451612903223
   },
   "visual": {
     "visualType": "card",
@@ -147,23 +146,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "322bbd8935200081e717",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "6ec09ebd9515054ceb31",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Household Disposable Income"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "322bbd8935200081e717"
 }

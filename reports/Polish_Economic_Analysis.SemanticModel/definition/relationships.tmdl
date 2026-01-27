@@ -10,3 +10,7 @@ relationship AutoDetected_064006aa-9104-4eaa-a11f-99b22d1c031a
 	fromColumn: Fact_Economics.region_id
 	toColumn: Dim_Region.region_id
 
+relationship 6fb29e4a-66a6-0aea-9b54-9386201080b2
+	fromColumn: Fact_Economics.year
+	toColumn: Chart_Axis_Years.year
+

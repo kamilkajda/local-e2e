@@ -101,7 +101,7 @@ table _Measures
 			    [Avg Unemployment Rate],
 			    ALL('Dim_Region'),
 			    'Dim_Region'[level_type] = "Country"
-			) /100
+			)
 			
 			```
 		formatString: 0.0%;-0.0%;0.0%
@@ -1300,7 +1300,7 @@ table _Measures
 		displayFolder: UI Mapping
 		lineageTag: 07b43f8c-d9cc-4e84-a67b-46c97d592914
 
-	measure 'Selected Year' = SELECTEDVALUE('Dim_Calendar'[year])
+	measure 'Selected Year Number' = SELECTEDVALUE('Dim_Calendar'[year]) * 1
 		formatString: 0
 		displayFolder: Title
 		lineageTag: 87322d11-6002-4e08-8a96-a15268e5140a
@@ -1311,9 +1311,166 @@ table _Measures
 
 	measure 'Report Title Dynamic' =
 			
-			[Selected Region] & " (" & [Selected Year] & ")"
+			[Selected Region] & " (" & [Selected Year Number] & ")"
 		displayFolder: Title
 		lineageTag: 933a4df3-8be9-4462-8d76-91ef62735a54
+
+	measure 'Selected Year Analytics' = SELECTEDVALUE('Dim_Calendar'[year])
+		formatString: 0
+		displayFolder: Charts
+		lineageTag: e1baac46-bae4-4ac5-af25-e0d5f5690f7f
+
+	measure 'Avg Gross Wage (Trend)' =
+			
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			RETURN
+			CALCULATE(
+			    [Avg Gross Wage],
+			    REMOVEFILTERS('Dim_Calendar'[year]),
+			    'Dim_Calendar'[year] = _YearOnAxis
+			)
+		displayFolder: Charts
+		lineageTag: 9aded972-1c99-409d-9afc-7ff6ce389a47
+
+	measure 'Avg Gross Wage (Poland) (Trend)' =
+			
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			RETURN
+			CALCULATE(
+			    [Avg Gross Wage (Poland)],
+			    REMOVEFILTERS('Dim_Calendar'[year]),
+			    'Dim_Calendar'[year] = _YearOnAxis
+			)
+		displayFolder: Charts
+		lineageTag: a7971bcb-848e-4fa3-8e7a-121e32a67bc7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Residential Price per m2 (Trend)' = ```
+			
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			RETURN
+			CALCULATE(
+			    [Avg Residential Price per m2],
+			    REMOVEFILTERS('Dim_Calendar'[year]),
+			    'Dim_Calendar'[year] = _YearOnAxis
+			)
+			
+			```
+		displayFolder: Charts
+		lineageTag: 0fdf6056-e21e-47cb-a9f3-6fa284f9b259
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Scatter Marker Color' = ```
+			
+			VAR _CurrentBubble = SELECTEDVALUE('Dim_Region'[Region])
+			VAR _SelectedInSlicer = [Selected Region] -- Your existing measure
+			RETURN 
+			    IF(
+			        _CurrentBubble = _SelectedInSlicer, 
+			        "#0EA5E9", -- Vibrant Blue
+			        "#D1D5DB"  -- Light Grey
+			    )
+			
+			```
+		displayFolder: UI Mapping
+		lineageTag: fd381707-336e-47be-9481-597b6b240f34
+
+	measure 'Executive Summary Text' = ```
+			
+			-- Context
+			VAR _Region = [Selected Region]
+			VAR _Year = [Selected Year Number]
+			
+			-- Verified Base Measures
+			VAR _Wage = [Avg Gross Wage]
+			VAR _WageYoY = [Avg Gross Wages YoY %]
+			VAR _Unemployment = [Avg Unemployment Rate]
+			VAR _UnemploymentYoY = [Avg Unemployment YoY %]
+			VAR _Gap = [Avg Gross Wage vs Avg Poland Gap %]
+			VAR _Income = [Avg Household Disposable Income]
+			VAR _Expenditures = [Avg Household Expenditures]
+			
+			-- Derived Logic
+			VAR _SavingsRate = DIVIDE(_Income - _Expenditures, _Income)
+			
+			-- Dynamic Vocabulary for Labor Market
+			VAR _LaborStatus = 
+			    SWITCH(TRUE(),
+			        ISBLANK(_UnemploymentYoY), "stands at ",
+			        _UnemploymentYoY < -0.01, "improved to ",     -- Significant drop (>1%)
+			        _UnemploymentYoY > 0.01, "increased to ",     -- Significant rise (>1%)
+			        "remains stable at "                          -- Neutral/Minor change
+			    )
+			
+			-- Formatting Parts
+			VAR _Header = UPPER(_Region) & " (" & _Year & ") - ECONOMIC SUMMARY"
+			
+			VAR _LineWages = 
+			    IF(NOT(ISBLANK(_Wage)),
+			        "• Wages: Average gross pay reached " & FORMAT(_Wage, "#,0 PLN") & " (" & FORMAT(_WageYoY, "+0.0%;-0.0%") & " YoY).",
+			        "• Wages: Data not available for this period."
+			    )
+			
+			VAR _LineBenchmark = 
+			    IF(NOT(ISBLANK(_Gap)),
+			        "• Benchmark: The region is currently " & FORMAT(ABS(_Gap), "0.0%") & IF(_Gap >= 0, " above ", " below ") & "the National average.",
+			        "• Benchmark: National comparison unavailable."
+			    )
+			
+			VAR _LineLabor = 
+			    IF(NOT(ISBLANK(_Unemployment)),
+			        "• Labor: Unemployment rate " & _LaborStatus & FORMAT(_Unemployment, "0.0%") & ".",
+			        "• Labor: Unemployment data pending for this year."
+			    )
+			
+			VAR _LineBudget = 
+			    IF(NOT(ISBLANK(_Income)),
+			        "• Budget: Disposable income is " & FORMAT(_Income, "#,0 PLN") & " with a " & FORMAT(_SavingsRate, "0%") & " savings buffer.",
+			        "• Budget: Household data not yet published for this region/year."
+			    )
+			
+			RETURN
+			    _Header & UNICHAR(10) & 
+			    _LineWages & UNICHAR(10) & 
+			    _LineBenchmark & UNICHAR(10) & 
+			    _LineLabor & UNICHAR(10) & 
+			    _LineBudget
+			```
+		displayFolder: Executive Chart Summary
+		lineageTag: 9161d00b-acc9-403c-9005-4c4218d20625
+
+	measure 'Household Savings Potential %' = ```
+			
+			DIVIDE([Avg Household Disposable Income] - [Avg Household Expenditures], [Avg Household Disposable Income])
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Living Standards
+		lineageTag: 300ef3d4-bd0c-4d89-bd8a-a8c559153bf4
+
+	measure 'Executive Card Header' = UPPER([Selected Region]) & " (" & [Selected Year Number] & ")"
+		displayFolder: Executive Chart Summary
+		lineageTag: b03e0f3b-8e7b-4fc2-ab08-a1a3ec286e46
+
+	measure 'Wage Gap Detail' =
+			
+			"vs National Average: " & FORMAT([Avg Gross Wage vs Avg Poland Gap %], "+0.0%;-0.0%")
+		displayFolder: Executive Chart Summary
+		lineageTag: 96ed9ca6-1ef9-47c7-a968-f050aa91300a
+
+	measure 'Unemployment Detail' =
+			
+			"Labor market trend: " & IF([Avg Gross Wages YoY %] > 0, "Improving", "Stabilizing")
+		displayFolder: Executive Chart Summary
+		lineageTag: 23612887-5e0f-4909-a3f8-fca7f42ad017
+
+	measure 'Household Budget Detail' =
+			
+			"Financial buffer: " & FORMAT([Household Savings Potential %], "0%") & " of income"
+		displayFolder: Executive Chart Summary
+		lineageTag: f1bb9e1a-4b1c-49b1-bfbc-10ddccf8e00f
 
 	partition _Measures = m
 		mode: import

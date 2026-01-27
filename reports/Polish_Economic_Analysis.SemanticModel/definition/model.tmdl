@@ -18,6 +18,7 @@ ref table Dim_Metrics
 ref table Dim_Region
 ref table Fact_Economics
 ref table _Measures
+ref table Chart_Axis_Years
 
 ref cultureInfo en-US
 

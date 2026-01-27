@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
   "name": "517fafc0d8c23d2d3400",
   "position": {
-    "x": 124.54545454545453,
-    "y": 61.818181818181813,
+    "x": 126.66666666666667,
+    "y": 61.666666666666671,
     "z": 2000,
-    "height": 198.18181818181816,
-    "width": 155.45454545454544,
-    "tabOrder": 2000
+    "height": 200,
+    "width": 150,
+    "tabOrder": 1000
   },
   "visual": {
     "visualType": "advancedSlicerVisual",
@@ -67,7 +67,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'NATIONAL'"
+                                "Value": "'LUBELSKIE'"
                               }
                             }
                           ]
@@ -701,7 +701,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "1b668860c009b60cc005",
+        "name": "fb6751d86657ca8b3b3f",
         "field": {
           "Column": {
             "Expression": {

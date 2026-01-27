@@ -7,7 +7,7 @@
     "z": 2000,
     "height": 26.169230769230765,
     "width": 178.92059553349876,
-    "tabOrder": 3000
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "card",
@@ -159,23 +159,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "2089ffab923e372831e0",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "50a02075a9066360025c",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Total Population YoY %"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "2089ffab923e372831e0"
 }

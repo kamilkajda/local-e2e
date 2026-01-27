@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
-  "name": "6d5212ed0c75bd85b348",
+  "name": "92faa4bdfba73c5b80c8",
   "position": {
-    "x": 0,
-    "y": 2.5,
-    "z": 8000,
-    "height": 60,
-    "width": 1263.75,
-    "tabOrder": 2000
+    "x": 490,
+    "y": 535,
+    "z": 12000,
+    "height": 176.66666666666669,
+    "width": 763.33333333333337,
+    "tabOrder": 10000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,13 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "POLAND: ECONOMIC PULSE - ",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24pt",
-                      "color": "#ffffff"
-                    }
-                  },
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
                   {
                     "value": {
                       "propertyIdentifier": {
@@ -33,13 +32,13 @@
                         "propertyName": "expr"
                       },
                       "selector": {
-                        "id": "DynamicTitle"
+                        "id": "Value"
                       }
                     },
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24pt",
-                      "color": "#ffffff"
+                      "fontSize": "14pt",
+                      "color": "#312e81"
                     }
                   }
                 ]
@@ -75,15 +74,15 @@
                                       "Source": "_"
                                     }
                                   },
-                                  "Property": "Report Title Dynamic"
+                                  "Property": "Executive Summary Text"
                                 },
-                                "Name": "_Measures.Report Title Dynamic"
+                                "Name": "_Measures.Executive Summary Text"
                               }
                             ]
                           }
                         }
                       },
-                      "Property": "_Measures.Report Title Dynamic"
+                      "Property": "_Measures.Executive Summary Text"
                     }
                   },
                   "IncludeAllTypes": 1
@@ -93,8 +92,8 @@
                     "version": 1,
                     "kind": "NaturalLanguage",
                     "annotation": {
-                      "name": "DynamicTitle",
-                      "utterance": "Report Title Dynamic"
+                      "name": "Value",
+                      "utterance": "executive summary text"
                     }
                   }
                 }
@@ -102,13 +101,26 @@
             }
           },
           "selector": {
-            "id": "DynamicTitle"
+            "id": "Value"
           }
         }
       ]
     },
     "visualContainerObjects": {
-      "background": [
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
         {
           "properties": {
             "show": {
@@ -121,13 +133,13 @@
           }
         }
       ],
-      "title": [
+      "visualHeader": [
         {
           "properties": {
-            "text": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "'Summary Title'"
+                  "Value": "false"
                 }
               }
             }

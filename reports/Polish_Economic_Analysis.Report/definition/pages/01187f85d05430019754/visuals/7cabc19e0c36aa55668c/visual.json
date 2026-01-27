@@ -7,7 +7,7 @@
     "z": 2000,
     "height": 26.169230769230765,
     "width": 178.92059553349876,
-    "tabOrder": 3000
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "card",
@@ -159,23 +159,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "68d6603d16a21d1c0591",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "e780fc525add4e091e76",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg GDP per Capita YoY %"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "68d6603d16a21d1c0591"
 }

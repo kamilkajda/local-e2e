@@ -1,0 +1,20 @@
+table Chart_Axis_Years
+	lineageTag: a263f75c-fac7-420f-816c-4edd44e21854
+
+	column year
+		formatString: 0
+		lineageTag: 8dfbe18e-910a-4e0f-830e-df3fee21d174
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Dim_Calendar[year]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	partition Chart_Axis_Years = calculated
+		mode: import
+		source = DISTINCT('Dim_Calendar'[year])
+
+	annotation PBI_Id = c46f21db58064b3d83c8e8621dd28feb
+

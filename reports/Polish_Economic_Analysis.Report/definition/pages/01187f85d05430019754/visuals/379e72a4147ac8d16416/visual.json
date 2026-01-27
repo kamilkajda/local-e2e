@@ -6,8 +6,7 @@
     "y": 30.038143674507307,
     "z": 3000,
     "height": 36.125874125874113,
-    "width": 178.06451612903223,
-    "tabOrder": 1000
+    "width": 178.06451612903223
   },
   "visual": {
     "visualType": "card",
@@ -154,23 +153,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "2089ffab923e372831e0",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "836605e1cc7085e9a93e",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Total Population"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "2089ffab923e372831e0"
 }

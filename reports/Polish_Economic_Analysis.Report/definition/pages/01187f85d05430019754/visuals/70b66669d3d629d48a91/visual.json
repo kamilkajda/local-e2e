@@ -6,8 +6,7 @@
     "y": 30.038143674507307,
     "z": 3000,
     "height": 36.125874125874113,
-    "width": 178.06451612903223,
-    "tabOrder": 1000
+    "width": 178.06451612903223
   },
   "visual": {
     "visualType": "card",
@@ -147,23 +146,5 @@
     },
     "drillFilterOtherVisuals": true
   },
-  "parentGroupName": "e696fc6270c13d288c6b",
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "63e844f0dc816ba501e2",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Gross Wage"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
-  }
+  "parentGroupName": "e696fc6270c13d288c6b"
 }
