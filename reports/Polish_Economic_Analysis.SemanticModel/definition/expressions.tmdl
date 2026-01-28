@@ -1,6 +1,15 @@
 /// http://192.168.0.218:10000/devstoreaccount1/etl-data
-expression AzuriteBaseUrl = "http://127.0.0.1:10000/devstoreaccount1/etl-data/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+expression AzuriteBaseUrl = "http://192.168.0.218:10000/devstoreaccount1/etl-data/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
 	lineageTag: 8ed29351-e788-4fc0-8a14-705eebf346d8
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// http://192.168.0.218:10000/devstoreaccount1
+/// http://127.0.0.1:10000/devstoreaccount1/etl-data/
+expression AzuritePlaceholder = "http://192.168.0.218:10000/devstoreaccount1" meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true]
+	lineageTag: d126d8cb-c283-4578-9184-c733ab7caee5
 
 	annotation PBI_NavigationStepName = Navigation
 
