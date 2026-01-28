@@ -3,7 +3,7 @@ import os
 def generate_readme():
     """
     Programmatically creates the project README.md file with the 
-    latest professional project documentation.
+    latest professional project documentation, including the live Power BI link.
     """
     # 1. Path Resolution
     # Assuming this script sits in src/utils/
@@ -13,6 +13,8 @@ def generate_readme():
 
     # 2. Content Definition
     content = """# Local E2E Data Engineering Project: Polish Economic Analysis
+
+### 🚀 [View Interactive Report (Power BI)](https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9)
 
 ## Project Overview
 This project demonstrates a professional end-to-end data engineering pipeline built in a local environment to simulate a production cloud-scale architecture. The system extracts, transforms, and visualizes regional economic disparities in Poland using data from the Statistics Poland (GUS) BDL API.

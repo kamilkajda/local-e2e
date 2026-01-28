@@ -1,0 +1,5 @@
+POLISH ECONOMIC ANALYSIS - INTERACTIVE REPORT LINK
+
+URL: https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9
+
+This link is permanent and provides public access to the Power BI dashboard.
