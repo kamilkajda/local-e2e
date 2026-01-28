@@ -23,11 +23,11 @@
                       "Entity": "Dim_Calendar"
                     }
                   },
-                  "Property": "year"
+                  "Property": "Year"
                 }
               },
               "queryRef": "Dim_Calendar.year",
-              "nativeQueryRef": "year"
+              "nativeQueryRef": "Year"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "Dim_Calendar"
                   }
                 },
-                "Property": "year"
+                "Property": "Year"
               }
             },
             "direction": "Descending"
@@ -76,7 +76,7 @@
                                   "Source": "d"
                                 }
                               },
-                              "Property": "year"
+                              "Property": "Year"
                             }
                           }
                         ],
@@ -84,7 +84,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "2022L"
+                                "Value": "2023L"
                               }
                             }
                           ]
@@ -725,7 +725,7 @@
                 "Entity": "Dim_Calendar"
               }
             },
-            "Property": "year"
+            "Property": "Year"
           }
         },
         "type": "Categorical",
@@ -752,7 +752,7 @@
                                 "Source": "d"
                               }
                             },
-                            "Property": "year"
+                            "Property": "Year"
                           }
                         }
                       ],

@@ -1,12 +1,12 @@
 table Dim_Calendar
 	lineageTag: d0e3e26c-6556-44ac-8bfe-a0b8d87cf0ac
 
-	column year
+	column Year
 		dataType: int64
 		formatString: 0
 		lineageTag: d49f131e-c3ba-41d3-a1d8-d18d7a512b9d
 		summarizeBy: none
-		sourceColumn: year
+		sourceColumn: Year
 
 		annotation SummarizationSetBy = Automatic
 
@@ -23,9 +23,10 @@ table Dim_Calendar
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_calendar/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_calendar/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"year", "Year"}})
 				in
-				    Source
+				    #"Renamed Columns"
 
 	annotation PBI_NavigationStepName = Navigation
 

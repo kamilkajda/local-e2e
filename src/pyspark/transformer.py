@@ -7,15 +7,19 @@ import os
 
 def flatten_gus_data(df: DataFrame) -> DataFrame:
     """
-    Explodes the nested GUS JSON structure. 
-    Added 'attr_id' to distinguish real zeros from data gaps/confidentiality.
+    Normalizes the hierarchical GUS BDL JSON structure into a flattened relational schema.
+    Extracts regional identifiers and time-series arrays while preserving the attribute 
+    metadata (attr_id) for downstream data quality validation.
     """
+    # Isolate unit results and explode nested time-series values
     df_units = df.select(F.explode(F.col("results")).alias("unit"))
     df_flat = df_units.select(
         F.col("unit.id").alias("region_id"),
         F.col("unit.name").alias("region_source"),
         F.explode(F.col("unit.values")).alias("val_obj")
     )
+    
+    # Cast to strictly typed columns for schema consistency
     return df_flat.select(
         F.col("region_id"),
         F.col("region_source"),
@@ -26,18 +30,18 @@ def flatten_gus_data(df: DataFrame) -> DataFrame:
 
 def impute_missing_values(df: DataFrame) -> DataFrame:
     """
-    Performs linear interpolation for missing/confidential data (attr_id != 1).
-    Fills 0.0 values with the average of the preceding and succeeding years.
-    Drops internal helper columns (including attr_id) before returning.
+    Implements data imputation using linear interpolation for records flagged as non-final 
+    or confidential (attr_id != 1). Replaces zero or null observations with the 
+    arithmetic mean of adjacent temporal neighbors within the same regional/metric partition.
     """
-    # Define window: partition by region and metric, order by year
+    # Partition by region and metric to ensure temporal continuity per series
     window_spec = Window.partitionBy("region_id", "metric_id").orderBy("year")
     
-    # Get neighbors
+    # Capture boundary values for interpolation logic
     df_neighbors = df.withColumn("prev_val", F.lag("value").over(window_spec)) \
                      .withColumn("next_val", F.lead("value").over(window_spec))
     
-    # Logic: If value is 0.0 and NOT Final (attr_id != 1), use average of neighbors
+    # Apply imputation logic: prioritize neighbors for non-final/missing data points
     df_imputed = df_neighbors.withColumn("value", 
         F.when(
             ((F.col("value") == 0.0) | (F.col("value").isNull())) & (F.col("attr_id") != 1),
@@ -45,15 +49,17 @@ def impute_missing_values(df: DataFrame) -> DataFrame:
         ).otherwise(F.col("value"))
     )
     
-    # Clean up: remove internal columns used for calculation
+    # Remove transient calculation columns and internal metadata before serving
     return df_imputed.drop("prev_val", "next_val", "attr_id")
 
 def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
     """
-    Orchestrates processing. Includes global data imputation (interpolation).
+    Orchestrates the transformation pipeline by aggregating multiple JSON sources 
+    into a unified fact table. Executes global data quality rules including 
+    metric identification and cross-metric value imputation.
     """
     all_facts = []
-    print("   [Transformer] Processing metrics into facts...")
+    print("   [Transformer] Aggregating metric sources into fact schema...")
     
     for metric in metrics:
         if not metric.get('variable_id'): continue
@@ -61,6 +67,7 @@ def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
         path = os.path.join(raw_data_dir, name, "*.json")
         
         try:
+            # MultiLine enabled to handle paginated GUS API response structures
             df_raw = spark.read.option("multiLine", True).json(path)
             if df_raw.rdd.isEmpty(): continue
             
@@ -76,15 +83,16 @@ def process_facts(spark: SparkSession, metrics: list, raw_data_dir: str):
     from functools import reduce
     df_combined = reduce(DataFrame.unionByName, all_facts)
     
-    # Apply global interpolation for gaps
-    print("   [Transformer] Applying global data imputation (Interpolation for gaps)...")
+    # Execute temporal gap filling for data consistency
+    print("   [Transformer] Executing global interpolation for missing observations...")
     return impute_missing_values(df_combined)
 
 def create_regions_dimension(df_all_facts: DataFrame) -> DataFrame:
     """
-    Creates Regions Dimension. Renames 'POLSKA' to 'NATIONAL'.
+    Derives the geographic dimension table. Implements naming normalization 
+    for national benchmarks and establishes the TERYT-based hierarchy levels.
     """
-    print("   [Transformer] Creating Regions Dim...")
+    print("   [Transformer] Deriving Regions dimension...")
     df_regions = df_all_facts.select("region_id", "region_source").distinct()
     
     return df_regions.withColumn(
@@ -102,7 +110,8 @@ def create_regions_dimension(df_all_facts: DataFrame) -> DataFrame:
 
 def create_metrics_dimension(spark: SparkSession, metrics_list: list) -> DataFrame:
     """
-    Converts metrics configuration into a formal dimension table.
+    Converts metrics configuration metadata into a structured dimension table 
+    for front-end cataloging and filtering.
     """
     schema = StructType([
         StructField("metric_id", IntegerType(), True),
@@ -114,7 +123,8 @@ def create_metrics_dimension(spark: SparkSession, metrics_list: list) -> DataFra
 
 def create_calendar_dimension(spark: SparkSession, df_facts: DataFrame) -> DataFrame:
     """
-    Creates a calendar table from 2000 up to the maximum year found in facts.
+    Generates a continuous time dimension. Dynamically calculates the range 
+    from the base year (2000) to the latest observed year in the fact table.
     """
     start_year = 2000
     max_year_row = df_facts.select(F.max("year")).collect()[0][0]

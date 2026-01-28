@@ -22,7 +22,7 @@
                       "Entity": "Dim_Calendar"
                     }
                   },
-                  "Property": "year"
+                  "Property": "Year"
                 }
               },
               "queryRef": "Dim_Calendar.year",

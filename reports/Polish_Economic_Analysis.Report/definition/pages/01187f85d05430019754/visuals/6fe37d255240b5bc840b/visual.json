@@ -23,11 +23,11 @@
                       "Entity": "Dim_Calendar"
                     }
                   },
-                  "Property": "year"
+                  "Property": "Year"
                 }
               },
               "queryRef": "Dim_Calendar.year",
-              "nativeQueryRef": "year",
+              "nativeQueryRef": "Year",
               "active": true
             }
           ]

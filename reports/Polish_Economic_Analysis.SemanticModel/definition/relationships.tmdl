@@ -1,6 +1,6 @@
 relationship 696f381d-bb59-e06e-8c6b-3ea69019c0ee
 	fromColumn: Fact_Economics.year
-	toColumn: Dim_Calendar.year
+	toColumn: Dim_Calendar.Year
 
 relationship AutoDetected_12a67a19-741a-4895-bab3-896ae97a0c19
 	fromColumn: Fact_Economics.metric_id
@@ -12,5 +12,5 @@ relationship AutoDetected_064006aa-9104-4eaa-a11f-99b22d1c031a
 
 relationship 6fb29e4a-66a6-0aea-9b54-9386201080b2
 	fromColumn: Fact_Economics.year
-	toColumn: Chart_Axis_Years.year
+	toColumn: Chart_Axis_Years.Year
 

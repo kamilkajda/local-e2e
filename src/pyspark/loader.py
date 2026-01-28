@@ -5,65 +5,59 @@ from pyspark.sql import DataFrame
 try:
     from azure.storage.blob import BlobServiceClient
 except ImportError:
-    print("[!] ERROR: azure-storage-blob missing. Run: pip install azure-storage-blob")
+    print("[!] ERROR: azure-storage-blob is missing. Please install the package to enable cloud loading.")
 
 def save_to_azurite(df: DataFrame, metric_name: str, config: dict) -> None:
     """
-    Saves DataFrame to local staging and then uploads to Azurite using Python SDK.
-    RENAMES the random Spark parquet file to a static name ('data.parquet') for easy Power BI access.
-    
-    :param df: Spark DataFrame to save
-    :param metric_name: Name of the metric (used for folder naming)
-    :param config: Configuration dictionary containing storage details
+    Orchestrates the persistence of Spark DataFrames by staging them locally and 
+    synchronizing with Azurite storage. Normalizes Spark-generated partition files 
+    into a static 'data.parquet' for stable downstream consumption in BI tools.
     """
-    # 1. Setup paths
+    # Resolve absolute paths for staging and project root
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(os.path.dirname(current_dir))
     staging_dir = os.path.join(project_root, "data", "staging", metric_name)
     
-    # 2. Get Azure config
+    # Extract storage metadata and credentials from configuration
     storage_conf = config.get('storage', {})
     conn_str = storage_conf.get('connection_string')
     container_name = storage_conf.get('container_name')
 
-    print(f"      [Loader] Staging data locally to: {staging_dir}")
+    print(f"      [Loader] Local staging initiated: {staging_dir}")
 
-    # 3. Write locally with Spark
+    # Synchronize local file system state for current metric
     if os.path.exists(staging_dir):
         shutil.rmtree(staging_dir)
     
-    # Save as Parquet locally (Spark creates part-00000... files)
+    # Persist DataFrame to staging; coalesce(1) ensures a single part file for stable blob mapping
     df.coalesce(1).write.mode("overwrite").parquet(staging_dir)
 
-    # 4. Upload to Azurite (with RENAME)
-    print(f"      [Loader] Preparing upload to container: {container_name}")
+    print(f"      [Loader] Initiating cloud synchronization to: {container_name}")
     
     try:
+        # Initialize client with API version compatible with local Azurite emulator
         blob_service_client = BlobServiceClient.from_connection_string(conn_str, api_version="2021-08-06")
         container_client = blob_service_client.get_container_client(container_name)
 
-        # CLEANUP: Remove old blobs to avoid mixing
-        # This ensures we start with a clean slate for this specific metric folder
+        # Ensure idempotency by purging existing blobs under the current metric prefix
         blobs_to_delete = container_client.list_blobs(name_starts_with=f"{metric_name}/")
         for blob in blobs_to_delete:
             container_client.delete_blob(blob.name)
 
-        # Upload with STATIC NAME
+        # Traverse staging directory and synchronize parquet assets
         for root, dirs, files in os.walk(staging_dir):
             for file in files:
                 if file.endswith(".parquet"):
                     local_file_path = os.path.join(root, file)
                     
-                    # KEY CHANGE: Instead of keeping the random 'part-xyz.parquet' name,
-                    # we upload it as 'data.parquet'. This gives us a stable URL for Power BI.
+                    # Enforce static naming convention to provide a stable URI for BI connectors
                     blob_name = f"{metric_name}/data.parquet"
                     
-                    # print(f"      [Loader] Uploading file as: {blob_name}")
                     with open(local_file_path, "rb") as data:
                         container_client.upload_blob(name=blob_name, data=data, overwrite=True)
                         
-        print(f"      [Loader] Upload success.")
+        print(f"      [Loader] Cloud synchronization successful.")
         
     except Exception as e:
-        print(f"      [Loader] Upload ERROR: {e}")
+        print(f"      [Loader] Critical failure during cloud synchronization: {e}")
         raise e

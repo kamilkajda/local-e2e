@@ -1,42 +1,12 @@
-# Power BI Master Measures Blueprint
+# Power BI Master Measures & Design Blueprint
 
-This document defines the standards for creating DAX measures and the analytical business logic within the Polish Economic Analysis project.
-
-## 1. Global Standards & UI Logic
-
-### Naming Convention
-* **Avg [Metric]**: Used for rates, ratios, and per capita values (e.g., Avg Gross Wage).
-* **Total [Metric]**: Used for absolute counts and sums (e.g., Total Population, Total GDP).
-* **[Metric] (Poland)**: National benchmark using `level_type = "Country"`.
-* **[Metric] YoY %**: Year-over-Year growth for the selected region.
-* **[Metric] (Poland) YoY %**: Year-over-Year growth for the national benchmark.
-* **[Metric] vs Poland Gap %**: Relative difference between selection and benchmark.
-
-### UI Color Logic (Status Colors)
-* **Higher is Better (1% Threshold):** Grey zone between -1% and +1%. Used for Wages, GDP, Income, Investment, Entities, Housing Prices, Sales, Revenue.
-* **Lower is Better (1% Threshold):** Grey zone between -1% and +1%. Used for Unemployment Rate, Expenditures, Budget Expenditure.
-* **Population (Zero Tolerance):** Green for any growth (>0), Red for any decline (<0).
+This document defines the analytical business logic, data transparency standards, and full metric mapping for the Polish Economic Analysis project.
 
 ---
 
-## 2. Global Measures (Navigation & Header)
+## 1. Metric Inventory (Variable Mapping)
 
-### [A] Dynamic Report Title
-```dax
--- Get currently selected year from Slicer
-Selected Year = SELECTEDVALUE('Dim_Calendar'[year])
-
--- Get currently selected region from Slicer (Defaults to NATIONAL)
-Selected Region = SELECTEDVALUE('Dim_Region'[unit_name_en], "NATIONAL")
-
--- Final Dynamic Title for the Header Card
-Report Title Dynamic = 
-"POLAND: ECONOMIC PULSE - " & [Selected Region] & " (" & [Selected Year] & ")"
-```
-
----
-
-## 3. Metric Inventory (Variable Mapping)
+The following table maps GUS BDL variable IDs to Power BI measures, including their intended aggregation and UI behavior.
 
 | Display Folder | Metric Name | GUS ID | Aggregation | Color Logic |
 | :--- | :--- | :--- | :--- | :--- |
@@ -59,75 +29,101 @@ Report Title Dynamic =
 
 ---
 
-## 4. Master DAX Blueprints
+## 2. Advanced Dynamic Narrative (Executive Summary)
 
-### 4.1 The 5-Measure Pattern (Example: Total GDP)
+The primary narrative visual uses DAX to generate a multi-line economic summary. It dynamically adapts to the selected region and year.
+
+### [DAX] Executive Summary Text
 ```dax
--- 1. Base Metric
-Total GDP = CALCULATE(SUM(Fact_Economics[value]), Fact_Economics[variable_id] = 458271)
+Executive Summary Text = 
+VAR _Region = [Selected Region]
+VAR _Year = [Selected Year Number]
 
--- 2. National Benchmark
-Total GDP (Poland) = CALCULATE([Total GDP], ALL(Dim_Region), Dim_Region[level_type] = "Country")
+-- Base Measures
+VAR _Wage = [Avg Gross Wage]
+VAR _WageYoY = [Avg Gross Wages YoY %]
+VAR _Unemployment = [Avg Unemployment Rate]
+VAR _UnemploymentYoY = [Avg Unemployment YoY %]
+VAR _Gap = [Avg Gross Wage vs Avg Poland Gap %]
+VAR _Income = [Avg Household Disposable Income]
+VAR _Expenditures = [Avg Household Expenditures]
 
--- 3. Regional YoY %
-Total GDP YoY % = 
-VAR _MaxYear = MAX('Dim_Calendar'[year])
-VAR _Current = [Total GDP]
-VAR _Prev = CALCULATE([Total GDP], 'Dim_Calendar'[year] = _MaxYear - 1)
-RETURN DIVIDE(_Current - _Prev, _Prev)
+-- Derived Logic
+VAR _SavingsRate = DIVIDE(_Income - _Expenditures, _Income)
 
--- 4. National YoY %
-Total GDP (Poland) YoY % = 
-VAR _MaxYear = MAX('Dim_Calendar'[year])
-VAR _Current = [Total GDP (Poland)]
-VAR _Prev = CALCULATE([Total GDP (Poland)], 'Dim_Calendar'[year] = _MaxYear - 1)
-RETURN DIVIDE(_Current - _Prev, _Prev)
+-- Imputation Flag (Transparency for Opolskie 2023)
+VAR _IsEstimated = _Region = "OPOLSKIE" && _Year = 2023
 
--- 5. Performance Gap %
-Total GDP vs Poland Gap % = DIVIDE([Total GDP] - [Total GDP (Poland)], [Total GDP (Poland)])
-```
+-- Dynamic Vocabulary for Labor Market
+VAR _LaborStatus = 
+    SWITCH(TRUE(),
+        ISBLANK(_UnemploymentYoY), "stands at ",
+        _UnemploymentYoY < -0.01, "improved to ",
+        _UnemploymentYoY > 0.01, "increased to ",
+        "remains stable at "
+    )
 
-### 4.2 Unemployment Rate Percentage Fix
-```dax
-Avg Unemployment Rate = 
-DIVIDE(
-    CALCULATE(AVERAGE(Fact_Economics[value]), Fact_Economics[variable_id] = 60270),
-    100
-)
+-- Formatting Parts
+VAR _Header = UPPER(_Region) & " (" & _Year & ") - ECONOMIC SUMMARY" & IF(_IsEstimated, " (ESTIMATED)", "")
+
+VAR _LineWages = "• Wages: Average gross pay reached " & FORMAT(_Wage, "#,0 PLN") & " (" & FORMAT(_WageYoY, "+0.0%;-0.0%") & " YoY)."
+VAR _LineBenchmark = "• Benchmark: The region is currently " & FORMAT(ABS(_Gap), "0.0%") & IF(_Gap >= 0, " above ", " below ") & "the National average."
+VAR _LineLabor = "• Labor: Unemployment rate " & _LaborStatus & FORMAT(_Unemployment, "0.0%") & "."
+VAR _LineBudget = "• Budget: Disposable income is " & FORMAT(_Income, "#,0 PLN") & " with a " & FORMAT(_SavingsRate, "0%") & " savings buffer."
+
+RETURN
+    _Header & UNICHAR(10) & 
+    _LineWages & UNICHAR(10) & 
+    _LineBenchmark & UNICHAR(10) & 
+    _LineLabor & UNICHAR(10) & 
+    _LineBudget
 ```
 
 ---
 
-## 5. UI Status Colors (Conditional Formatting)
+## 3. Data Imputation Awareness (The "Estimated" Flag)
 
-### A. UI Color - Higher is Better (1% Threshold)
-```dax
-UI Color - Higher is Better = 
-VAR _Trend = [Target YoY %] -- Replace with specific YoY measure
-RETURN 
-    SWITCH( TRUE(),
-        _Trend >= 0.01,  "#00C805", -- Green (Growth >= 1%)
-        _Trend <= -0.01, "#FF0000", -- Red (Decline <= -1%)
-        "#6B7280"                   -- Grey (Neutral)
-    )
-```
+To maintain analytical integrity, we explicitly flag data that was imputed during the ETL process.
 
-### B. UI Color - Lower is Better (1% Threshold)
-```dax
-UI Color - Lower is Better = 
-VAR _Trend = [Target YoY %] -- Replace with specific YoY measure
-RETURN 
-    SWITCH( TRUE(),
-        _Trend <= -0.01, "#00C805", -- Green (Drop is good)
-        _Trend >= 0.01,  "#FF0000", -- Red (Increase is bad)
-        "#6B7280"                   -- Grey (Neutral)
-    )
-```
+### Implementation:
+* **Visual Titles:** Use the `(ESTIMATED)` suffix in dynamic titles when Opolskie + 2023 are selected.
+* **Narrative:** The `Executive Summary Text` measure includes a logic check to append the estimation notice to the header line.
+* **Goal:** Full transparency regarding data gaps and the automated interpolation handled in PySpark.
 
-### C. UI Color - Population (Zero Tolerance)
-```dax
-UI Color - Population = 
-VAR _Trend = [Total Population YoY %]
-RETURN 
-    IF(_Trend > 0, "#00C805", "#FF0000")
-```
+---
+
+## 4. Page Navigator & Sync Slicers Logic
+
+The report behaves like a web application using built-in navigation and synchronized states.
+
+### Page Navigator:
+* **Visual:** `Insert -> Buttons -> Navigator -> Page navigator`.
+* **Behavior:** Automatically updates buttons based on report page names.
+* **Styling:** Rounded corners (12px) with Indigo/White toggle states to match the Bento Grid UI.
+
+### Sync Slicers:
+* **Configuration:** Go to `View -> Sync slicers`.
+* **Logic:** The "Year" slicer is synced across all pages. 
+* **Benefit:** Selecting a year once persists the context during navigation.
+
+---
+
+## 5. Scatter Chart: Play Axis Animation
+
+The "Labor Market: Wages vs Unemployment" chart uses a temporal dimension to show market maturation.
+
+### Configuration:
+* **X-Axis:** `Avg Unemployment Rate` (Fixed Range: 0% to 25%).
+* **Y-Axis:** `Avg Gross Wage` (Fixed Range: 0 to 10k PLN).
+* **Play Axis:** `Dim_Calendar[year]`.
+* **Visual Watermark:** Power BI displays the year as a background watermark during animation.
+
+---
+
+## 6. Standard Formatting Summary
+
+| Metric Category | Format String | Logic |
+| :--- | :--- | :--- |
+| **Financials** | `#,0 "PLN"` | PLN Suffix, Thousands separator |
+| **Growth/Rates** | `+0.0%;-0.0%;0.0%` | Signed percentages for YoY changes |
+| **Population** | `#,0` | Whole numbers |

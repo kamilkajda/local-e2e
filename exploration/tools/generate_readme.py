@@ -1,4 +1,18 @@
-# Local E2E Data Engineering Project: Polish Economic Analysis
+import os
+
+def generate_readme():
+    """
+    Programmatically creates the project README.md file with the 
+    latest professional project documentation.
+    """
+    # 1. Path Resolution
+    # Assuming this script sits in src/utils/
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    readme_path = os.path.join(project_root, "README.md")
+
+    # 2. Content Definition
+    content = """# Local E2E Data Engineering Project: Polish Economic Analysis
 
 ## Project Overview
 This project demonstrates a professional end-to-end data engineering pipeline built in a local environment to simulate a production cloud-scale architecture. The system extracts, transforms, and visualizes regional economic disparities in Poland using data from the Statistics Poland (GUS) BDL API.
@@ -44,14 +58,14 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Emulator:** Node.js for Azurite Blob Storage.
 
 ## Quick Start
-1. **Start Services (Azurite):** `.\scripts\start_all.ps1`
-2. **Run ETL Pipeline:** `.\scripts\run_etl_dev.ps1`
+1. **Start Services (Azurite):** `.\\scripts\\start_all.ps1`
+2. **Run ETL Pipeline:** `.\\scripts\\run_etl_dev.ps1`
 
 ## Maintenance & Cleanup
 To maintain a clean environment or reset data states, use the following utility scripts:
-* **Reset Cloud Storage:** `python .\exploration\tools\reset_azurite.py` (Wipes Azurite containers).
-* **Clear Spark Staging:** `.\scripts\maintenance\clean_staging.ps1` (Removes transient Parquet files).
-* **Purge Raw API Data:** `.\scripts\maintenance\clean_raw_data.ps1` (Deletes all JSON source files).
+* **Reset Cloud Storage:** `python .\\exploration\\tools\\reset_azurite.py` (Wipes Azurite containers).
+* **Clear Spark Staging:** `.\\scripts\\maintenance\\clean_staging.ps1` (Removes transient Parquet files).
+* **Purge Raw API Data:** `.\\scripts\\maintenance\\clean_raw_data.ps1` (Deletes all JSON source files).
 
 ## Configuration Setup
 Active `settings.json` files are ignored by Git. Use the provided templates:
@@ -63,3 +77,15 @@ This project was developed in collaboration with **Google Gemini 2.5 Flash Previ
 * Architecting the Windows-compatible Spark environment.
 * Designing complex DAX measures for economic benchmarking.
 * Refactoring code for professional documentation standards and idempotency.
+"""
+
+    # 3. Write File
+    try:
+        with open(readme_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        print(f"[OK] README.md generated successfully at: {readme_path}")
+    except Exception as e:
+        print(f"[ERROR] Failed to generate README: {e}")
+
+if __name__ == "__main__":
+    generate_readme()

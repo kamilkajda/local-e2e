@@ -28,12 +28,12 @@ table _Measures
 
 	measure 'Avg Gross Wages YoY %' = ```
 			
-			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR CurrentVal = [Avg Gross Wage]
 			VAR PrevVal = 
 			    CALCULATE(
 			        [Avg Gross Wage], 
-			        'Dim_Calendar'[year] = CurrentYear - 1
+			        'Dim_Calendar'[Year] = CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(CurrentVal - PrevVal, PrevVal)
@@ -44,12 +44,12 @@ table _Measures
 
 	measure 'Avg Gross Wages (Poland) YoY %' = ```
 			
-			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR CurrentVal = [Avg Gross Wage (Poland)]
 			VAR PrevVal = 
 			    CALCULATE(
 			        [Avg Gross Wage (Poland)], 
-			        'Dim_Calendar'[year] = CurrentYear - 1
+			        'Dim_Calendar'[Year] = CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(CurrentVal - PrevVal, PrevVal)
@@ -110,12 +110,12 @@ table _Measures
 
 	measure 'Avg Unemployment YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Unemployment Rate]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Unemployment Rate], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -127,12 +127,12 @@ table _Measures
 
 	measure 'Avg Unemployment (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Unemployment Rate (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Unemployment Rate (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -193,12 +193,12 @@ table _Measures
 
 	measure 'Avg GDP per Capita YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg GDP per Capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg GDP per Capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -209,12 +209,12 @@ table _Measures
 
 	measure 'Avg GDP (Poland) per Capita YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg GDP (Poland) per Capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg GDP (Poland) per Capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -261,12 +261,12 @@ table _Measures
 
 	measure 'Avg Investment YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Investment per Capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Investment per Capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -277,12 +277,12 @@ table _Measures
 
 	measure 'Avg Investment (Poland) per Capita YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Investment (Poland) per Capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Investment (Poland) per Capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -355,12 +355,12 @@ table _Measures
 
 	measure 'Avg Household Disposable Income YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Household Disposable Income]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Household Disposable Income], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -371,12 +371,12 @@ table _Measures
 
 	measure 'Avg Household Disposable Income (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Household Disposable Income (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Household Disposable Income (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -423,12 +423,12 @@ table _Measures
 
 	measure 'Avg Household Expenditures YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Household Expenditures]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Household Expenditures], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -439,12 +439,12 @@ table _Measures
 
 	measure 'Avg Household Expenditures (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Household Expenditures (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Household Expenditures (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -517,12 +517,12 @@ table _Measures
 
 	measure 'Avg Residential Price YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Residential Price per m2]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Residential Price per m2], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -544,12 +544,12 @@ table _Measures
 
 	measure 'Avg Residential Price (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Residential Price per m2 (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Residential Price per m2 (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -639,12 +639,12 @@ table _Measures
 
 	measure 'Total Dwellings Completed YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Dwellings Completed]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Dwellings Completed], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -680,12 +680,12 @@ table _Measures
 
 	measure 'Avg Dwellings Completed per 1k YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Dwellings Completed per 1k]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Dwellings Completed per 1k], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -696,12 +696,12 @@ table _Measures
 
 	measure 'Avg Dwellings Completed per 1k (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Dwellings Completed per 1k (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Dwellings Completed per 1k (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -760,12 +760,12 @@ table _Measures
 
 	measure 'Total Dwellings Sold (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Dwellings Sold (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Dwellings Sold (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -801,12 +801,12 @@ table _Measures
 
 	measure 'Total Dwellings Completed (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Dwellings Completed (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Dwellings Completed (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -829,12 +829,12 @@ table _Measures
 
 	measure 'Total Dwellings Sold YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Dwellings Sold]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Dwellings Sold], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -846,12 +846,12 @@ table _Measures
 
 	measure 'Total Market Share % YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Market Share %]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Market Share %], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -862,12 +862,12 @@ table _Measures
 
 	measure 'Total Market Share % (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Market Share % (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Market Share % (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -901,12 +901,12 @@ table _Measures
 
 	measure 'Avg Business Entities YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Business Entities per 10k]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Business Entities per 10k], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -917,12 +917,12 @@ table _Measures
 
 	measure 'Avg Business Entities (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Business Entities per 10k (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Business Entities per 10k (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -989,12 +989,12 @@ table _Measures
 
 	measure 'Avg Budget Revenue per capita YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Budget Revenue per capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Budget Revenue per capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1005,12 +1005,12 @@ table _Measures
 
 	measure 'Avg Budget Revenue per capita (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Budget Revenue per capita (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Budget Revenue per capita (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1063,12 +1063,12 @@ table _Measures
 
 	measure 'Avg Budget Expenditure per capita YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Budget Expenditure per capita]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Budget Expenditure per capita], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1080,12 +1080,12 @@ table _Measures
 
 	measure 'Avg Budget Expenditure per capita (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Avg Budget Expenditure per capita (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Avg Budget Expenditure per capita (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1159,12 +1159,12 @@ table _Measures
 
 	measure 'Total Population YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Population]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Population], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1175,12 +1175,12 @@ table _Measures
 
 	measure 'Total Population (Poland) YoY %' = ```
 			
-			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _CurrentYear = SELECTEDVALUE('Dim_Calendar'[Year])
 			VAR _CurrentVal = [Total Population (Poland)]
 			VAR _PrevVal = 
 			    CALCULATE(
 			        [Total Population (Poland)], 
-			        'Dim_Calendar'[year] = _CurrentYear - 1
+			        'Dim_Calendar'[Year] = _CurrentYear - 1
 			    )
 			RETURN 
 			    DIVIDE(_CurrentVal - _PrevVal, _PrevVal)
@@ -1243,12 +1243,12 @@ table _Measures
 
 	measure 'Total GDP YoY %' = ```
 			
-			VAR _MaxYear = MAX ( 'Dim_Calendar'[year] )
+			VAR _MaxYear = MAX ( 'Dim_Calendar'[Year] )
 			VAR _Current = [Total GDP]
 			VAR _Prev = 
 			    CALCULATE ( 
 			        [Total GDP], 
-			        'Dim_Calendar'[year] = _MaxYear - 1 
+			        'Dim_Calendar'[Year] = _MaxYear - 1 
 			    )
 			RETURN 
 			    DIVIDE ( _Current - _Prev, _Prev )
@@ -1260,12 +1260,12 @@ table _Measures
 
 	measure 'Total GDP (Poland) YoY %' = ```
 			
-			VAR _MaxYear = MAX ( 'Dim_Calendar'[year] )
+			VAR _MaxYear = MAX ( 'Dim_Calendar'[Year] )
 			VAR _Current = [Total GDP (Poland)]
 			VAR _Prev = 
 			    CALCULATE ( 
 			        [Total GDP (Poland)], 
-			        'Dim_Calendar'[year] = _MaxYear - 1 
+			        'Dim_Calendar'[Year] = _MaxYear - 1 
 			    )
 			RETURN 
 			    DIVIDE ( _Current - _Prev, _Prev )
@@ -1300,7 +1300,7 @@ table _Measures
 		displayFolder: UI Mapping
 		lineageTag: 07b43f8c-d9cc-4e84-a67b-46c97d592914
 
-	measure 'Selected Year Number' = SELECTEDVALUE('Dim_Calendar'[year]) * 1
+	measure 'Selected Year Number' = SELECTEDVALUE('Dim_Calendar'[Year]) * 1
 		formatString: 0
 		displayFolder: Title
 		lineageTag: 87322d11-6002-4e08-8a96-a15268e5140a
@@ -1315,31 +1315,31 @@ table _Measures
 		displayFolder: Title
 		lineageTag: 933a4df3-8be9-4462-8d76-91ef62735a54
 
-	measure 'Selected Year Analytics' = SELECTEDVALUE('Dim_Calendar'[year])
+	measure 'Selected Year Analytics' = SELECTEDVALUE('Dim_Calendar'[Year])
 		formatString: 0
 		displayFolder: Charts
 		lineageTag: e1baac46-bae4-4ac5-af25-e0d5f5690f7f
 
 	measure 'Avg Gross Wage (Trend)' =
 			
-			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[Year])
 			RETURN
 			CALCULATE(
 			    [Avg Gross Wage],
-			    REMOVEFILTERS('Dim_Calendar'[year]),
-			    'Dim_Calendar'[year] = _YearOnAxis
+			    REMOVEFILTERS('Dim_Calendar'[Year]),
+			    'Dim_Calendar'[Year] = _YearOnAxis
 			)
 		displayFolder: Charts
 		lineageTag: 9aded972-1c99-409d-9afc-7ff6ce389a47
 
 	measure 'Avg Gross Wage (Poland) (Trend)' =
 			
-			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[Year])
 			RETURN
 			CALCULATE(
 			    [Avg Gross Wage (Poland)],
-			    REMOVEFILTERS('Dim_Calendar'[year]),
-			    'Dim_Calendar'[year] = _YearOnAxis
+			    REMOVEFILTERS('Dim_Calendar'[Year]),
+			    'Dim_Calendar'[Year] = _YearOnAxis
 			)
 		displayFolder: Charts
 		lineageTag: a7971bcb-848e-4fa3-8e7a-121e32a67bc7
@@ -1348,12 +1348,12 @@ table _Measures
 
 	measure 'Avg Residential Price per m2 (Trend)' = ```
 			
-			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[year])
+			VAR _YearOnAxis = SELECTEDVALUE('Chart_Axis_Years'[Year])
 			RETURN
 			CALCULATE(
 			    [Avg Residential Price per m2],
-			    REMOVEFILTERS('Dim_Calendar'[year]),
-			    'Dim_Calendar'[year] = _YearOnAxis
+			    REMOVEFILTERS('Dim_Calendar'[Year]),
+			    'Dim_Calendar'[Year] = _YearOnAxis
 			)
 			
 			```
@@ -1379,11 +1379,10 @@ table _Measures
 
 	measure 'Executive Summary Text' = ```
 			
-			-- Context
 			VAR _Region = [Selected Region]
 			VAR _Year = [Selected Year Number]
 			
-			-- Verified Base Measures
+			-- Base Measures
 			VAR _Wage = [Avg Gross Wage]
 			VAR _WageYoY = [Avg Gross Wages YoY %]
 			VAR _Unemployment = [Avg Unemployment Rate]
@@ -1395,41 +1394,25 @@ table _Measures
 			-- Derived Logic
 			VAR _SavingsRate = DIVIDE(_Income - _Expenditures, _Income)
 			
+			-- Imputation Flag (Transparency for Opolskie 2023)
+			VAR _IsEstimated = _Region = "OPOLSKIE" && _Year = 2023
+			
 			-- Dynamic Vocabulary for Labor Market
 			VAR _LaborStatus = 
 			    SWITCH(TRUE(),
 			        ISBLANK(_UnemploymentYoY), "stands at ",
-			        _UnemploymentYoY < -0.01, "improved to ",     -- Significant drop (>1%)
-			        _UnemploymentYoY > 0.01, "increased to ",     -- Significant rise (>1%)
-			        "remains stable at "                          -- Neutral/Minor change
+			        _UnemploymentYoY < -0.01, "improved to ",
+			        _UnemploymentYoY > 0.01, "increased to ",
+			        "remains stable at "
 			    )
 			
 			-- Formatting Parts
-			VAR _Header = UPPER(_Region) & " (" & _Year & ") - ECONOMIC SUMMARY"
+			VAR _Header = UPPER(_Region) & " (" & _Year & ") - ECONOMIC SUMMARY" & IF(_IsEstimated, " (ESTIMATED)", "")
 			
-			VAR _LineWages = 
-			    IF(NOT(ISBLANK(_Wage)),
-			        "• Wages: Average gross pay reached " & FORMAT(_Wage, "#,0 PLN") & " (" & FORMAT(_WageYoY, "+0.0%;-0.0%") & " YoY).",
-			        "• Wages: Data not available for this period."
-			    )
-			
-			VAR _LineBenchmark = 
-			    IF(NOT(ISBLANK(_Gap)),
-			        "• Benchmark: The region is currently " & FORMAT(ABS(_Gap), "0.0%") & IF(_Gap >= 0, " above ", " below ") & "the National average.",
-			        "• Benchmark: National comparison unavailable."
-			    )
-			
-			VAR _LineLabor = 
-			    IF(NOT(ISBLANK(_Unemployment)),
-			        "• Labor: Unemployment rate " & _LaborStatus & FORMAT(_Unemployment, "0.0%") & ".",
-			        "• Labor: Unemployment data pending for this year."
-			    )
-			
-			VAR _LineBudget = 
-			    IF(NOT(ISBLANK(_Income)),
-			        "• Budget: Disposable income is " & FORMAT(_Income, "#,0 PLN") & " with a " & FORMAT(_SavingsRate, "0%") & " savings buffer.",
-			        "• Budget: Household data not yet published for this region/year."
-			    )
+			VAR _LineWages = "• Wages: Average gross pay reached " & FORMAT(_Wage, "#,0 PLN") & " (" & FORMAT(_WageYoY, "+0.0%;-0.0%") & " YoY)."
+			VAR _LineBenchmark = "• Benchmark: The region is currently " & FORMAT(ABS(_Gap), "0.0%") & IF(_Gap >= 0, " above ", " below ") & "the National average."
+			VAR _LineLabor = "• Labor: Unemployment rate " & _LaborStatus & FORMAT(_Unemployment, "0.0%") & "."
+			VAR _LineBudget = "• Budget: Disposable income is " & FORMAT(_Income, "#,0 PLN") & " with a " & FORMAT(_SavingsRate, "0%") & " savings buffer."
 			
 			RETURN
 			    _Header & UNICHAR(10) & 
@@ -1453,24 +1436,6 @@ table _Measures
 	measure 'Executive Card Header' = UPPER([Selected Region]) & " (" & [Selected Year Number] & ")"
 		displayFolder: Executive Chart Summary
 		lineageTag: b03e0f3b-8e7b-4fc2-ab08-a1a3ec286e46
-
-	measure 'Wage Gap Detail' =
-			
-			"vs National Average: " & FORMAT([Avg Gross Wage vs Avg Poland Gap %], "+0.0%;-0.0%")
-		displayFolder: Executive Chart Summary
-		lineageTag: 96ed9ca6-1ef9-47c7-a968-f050aa91300a
-
-	measure 'Unemployment Detail' =
-			
-			"Labor market trend: " & IF([Avg Gross Wages YoY %] > 0, "Improving", "Stabilizing")
-		displayFolder: Executive Chart Summary
-		lineageTag: 23612887-5e0f-4909-a3f8-fca7f42ad017
-
-	measure 'Household Budget Detail' =
-			
-			"Financial buffer: " & FORMAT([Household Savings Potential %], "0%") & " of income"
-		displayFolder: Executive Chart Summary
-		lineageTag: f1bb9e1a-4b1c-49b1-bfbc-10ddccf8e00f
 
 	partition _Measures = m
 		mode: import

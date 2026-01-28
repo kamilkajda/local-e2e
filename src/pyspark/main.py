@@ -8,48 +8,59 @@ import transformer
 import loader
 
 def main():
-    print(f"--- ETL Job Started (Renamed Schema) ---")
+    """
+    Primary entry point for the E2E ETL pipeline. 
+    Manages the lifecycle of data extraction from GUS API, transformation via PySpark, 
+    and multi-dimensional loading into Azurite storage.
+    """
+    print(f"--- ETL Job Orchestration Started ---")
+    
+    # Initialization of runtime arguments and environment configuration
     args = parse_arguments()
     config = load_config(args.config)
     
-    # Path Resolution
+    # Dynamic path resolution to ensure portability across different local environments
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     raw_data_dir = os.path.abspath(config['paths']['raw'])
     
-    # Load metrics mapping
+    # Load metric definitions for API targeting
     metrics_path = os.path.join(project_root, "configs", "gus_metrics.json")
     with open(metrics_path, 'r', encoding='utf-8') as f:
         metrics = json.load(f)
 
-    # STEP 1: EXTRACT
-    print("\n>>> STEP 1: EXTRACT")
+    # DATA EXTRACTION PHASE
+    # Communicates with GUS BDL API to persist raw JSON telemetry
+    print("\n>>> Phase 1: Ingestion (API Extraction)")
     client = GusClient(api_key=config.get('gus', {}).get('api_key'))
     client.download_all_metrics(metrics, raw_data_dir, levels=[0, 2], force=args.force)
 
-    # STEP 2 & 3: TRANSFORM & LOAD
-    print("\n>>> STEP 2 & 3: TRANSFORM & LOAD")
+    # TRANSFORMATION & LOAD PHASE
+    # Requires active SparkSession and verified Azurite container state
+    print("\n>>> Phase 2: Processing & Persistence (Spark Transformation)")
     ensure_container_exists(config['storage']['connection_string'], config['storage']['container_name'])
     spark = create_spark_session(config)
     
-    # Process Facts (returns internal DF with region_source for dimension building)
+    # Executes business logic and global data imputation (interpolation)
+    # Returns an internal DataFrame mapped with regional sources for dimension bridging
     df_internal = transformer.process_facts(spark, metrics, raw_data_dir)
     
     if df_internal:
-        print("   [Main] Data processed. Cleaning facts and building dimensions...")
+        print("   [Main] Transformation complete. Generating relational assets...")
         
-        # 1. Clean Fact Table: Remove 'region_source' before saving to storage
+        # Fact Table: Removal of transient columns before cloud synchronization
         df_facts_final = df_internal.drop("region_source")
         loader.save_to_azurite(df_facts_final, "fact_economics", config)
         
-        # 2. Build Dimensions (using the internal DF that still has region_source)
+        # Dimension Tables: Derived from the internal analytical dataset
         loader.save_to_azurite(transformer.create_regions_dimension(df_internal), "dim_region", config)
         loader.save_to_azurite(transformer.create_metrics_dimension(spark, metrics), "dim_metrics", config)
         loader.save_to_azurite(transformer.create_calendar_dimension(spark, df_internal), "dim_calendar", config)
     else:
-        print("   [Main] WARNING: No facts were processed. Check raw data.")
+        print("   [Main] WARNING: Transformation resulted in an empty dataset. Pipeline aborted.")
 
+    # Graceful shutdown of Spark resource manager
     spark.stop()
-    print("\n--- ETL Job Finished Successfully ---")
+    print("\n--- ETL Job Orchestration Finished Successfully ---")
 
 if __name__ == "__main__":
     main()

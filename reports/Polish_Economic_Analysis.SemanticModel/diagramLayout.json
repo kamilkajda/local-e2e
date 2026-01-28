@@ -19,7 +19,7 @@
             "height": 183,
             "width": 234
           },
-          "zIndex": 4
+          "zIndex": 6
         },
         {
           "location": {
@@ -58,7 +58,7 @@
             "height": 254,
             "width": 234
           },
-          "zIndex": 6
+          "zIndex": 5
         },
         {
           "location": {
@@ -83,7 +83,7 @@
             "height": 200,
             "width": 234
           },
-          "zIndex": 5
+          "zIndex": 4
         }
       ],
       "name": "All tables",

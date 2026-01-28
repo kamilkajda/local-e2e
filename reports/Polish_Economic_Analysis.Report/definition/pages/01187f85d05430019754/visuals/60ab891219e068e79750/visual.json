@@ -23,11 +23,11 @@
                       "Entity": "Chart_Axis_Years"
                     }
                   },
-                  "Property": "year"
+                  "Property": "Year"
                 }
               },
               "queryRef": "Chart_Years.year",
-              "nativeQueryRef": "year1",
+              "nativeQueryRef": "Year",
               "active": true
             }
           ]

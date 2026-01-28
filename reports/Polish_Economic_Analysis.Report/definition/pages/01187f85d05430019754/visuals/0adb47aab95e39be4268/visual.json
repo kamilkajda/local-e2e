@@ -23,11 +23,11 @@
                       "Entity": "Chart_Axis_Years"
                     }
                   },
-                  "Property": "year"
+                  "Property": "Year"
                 }
               },
               "queryRef": "Chart_Years.year",
-              "nativeQueryRef": "year",
+              "nativeQueryRef": "Year",
               "active": true
             }
           ]
@@ -610,5 +610,51 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "ac7da1ede934c222b129",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Chart_Axis_Years"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a9510741d91b481dbff1",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Avg Gross Wage (Trend)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "34c6274c44026ad92f4f",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Avg Residential Price per m2 (Trend)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

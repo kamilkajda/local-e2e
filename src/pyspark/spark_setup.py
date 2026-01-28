@@ -3,7 +3,10 @@ import sys
 from pyspark.sql import SparkSession
 
 def _parse_connection_string(conn_str):
-    """Parses Azurite connection string and returns a config dictionary."""
+    """
+    Parses an Azure Storage connection string into a key-value dictionary.
+    Used to extract credentials and endpoints for Hadoop configuration.
+    """
     config = {}
     parts = conn_str.split(';')
     for part in parts:
@@ -17,52 +20,44 @@ def _parse_connection_string(conn_str):
 
 def _configure_windows_environment():
     """
-    Sets up HADOOP_HOME and PATH for Windows specifically using local binaries.
-    This makes the project portable without requiring global env vars.
+    Normalizes the Windows environment by dynamically resolving HADOOP_HOME 
+    and injecting local binaries into the system PATH. Ensures portability 
+    across different local development machines without manual environment variables.
     """
-    # Run this configuration only on Windows
     if sys.platform != 'win32':
         return
 
-    # Locate the 'hadoop' folder in the project root
-    # Assumption: structure is local-e2e/src/pyspark/spark_setup.py -> go up 2 levels
+    # Dynamic project root resolution relative to script location
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
     
-    # Construct path to local-e2e/hadoop/bin
     hadoop_home = os.path.join(project_root, "hadoop")
     hadoop_bin = os.path.join(hadoop_home, "bin")
     
     winutils_path = os.path.join(hadoop_bin, "winutils.exe")
     hadoop_dll_path = os.path.join(hadoop_bin, "hadoop.dll")
 
-    # Check if the required binaries actually exist
     if os.path.exists(winutils_path) and os.path.exists(hadoop_dll_path):
-        print(f"   [SparkSetup] Found local WinUtils at: {hadoop_bin}")
-        
-        # 1. Set HADOOP_HOME environment variable
         os.environ['HADOOP_HOME'] = hadoop_home
         
-        # 2. Add the bin folder to PATH (critical for loading hadoop.dll)
+        # Inject hadoop binaries into PATH to enable native library loading (hadoop.dll)
         current_path = os.environ.get('PATH', '')
         if hadoop_bin not in current_path:
             os.environ['PATH'] = hadoop_bin + os.pathsep + current_path
-            print("   [SparkSetup] Added Hadoop bin to PATH.")
     else:
-        print("   [SparkSetup] WARNING: WinUtils not found in project!")
-        print(f"   Expected path: {hadoop_bin}")
-        print("   Please download hadoop.dll and winutils.exe to this folder to fix write errors.")
+        print(f"   [SparkSetup] WARNING: WinUtils binaries missing at {hadoop_bin}")
 
 def create_spark_session(config):
-    """Initializes and configures SparkSession."""
-    
-    print("   [SparkSetup] Initializing SparkSession...")
+    """
+    Configures and initializes a SparkSession. Implements specific logic for 
+    WASB filesystem abstraction when targeting local Azurite storage.
+    """
+    print("   [SparkSetup] Initializing SparkSession instance...")
 
-    # FIX 1: "Python not found" error (Microsoft Store issue)
+    # Environmental normalization for Python workers
     os.environ['PYSPARK_PYTHON'] = sys.executable
     os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
     
-    # FIX 2: "UnsatisfiedLinkError" (Missing hadoop.dll on Windows)
     _configure_windows_environment()
 
     storage_config = config.get('storage', {})
@@ -72,7 +67,7 @@ def create_spark_session(config):
     builder = SparkSession.builder.appName(f"GusETL_{env}")
 
     if conn_str and env == 'dev':
-        print("   [SparkSetup] Configuring for local Azurite...")
+        print("   [SparkSetup] Applying Azurite storage driver configuration...")
         
         conn_parts = _parse_connection_string(conn_str)
         account_name = conn_parts.get('AccountName', 'devstoreaccount1')
@@ -80,22 +75,20 @@ def create_spark_session(config):
         blob_endpoint = conn_parts.get('BlobEndpoint')
         
         if not account_key or not blob_endpoint:
-             print("   [ERROR] Invalid Connection String in settings.json")
+             print("   [ERROR] Malformed connection string in configuration.")
              sys.exit(20)
 
-        # Drivers
-        # hadoop-azure 3.3.4 matches our WinUtils version
+        # Storage connector artifacts
         spark_jars_packages = "org.apache.hadoop:hadoop-azure:3.3.4"
-        
         builder = builder.config("spark.jars.packages", spark_jars_packages)
         
         spark = builder.getOrCreate()
 
-        # Auth - Shared Key
+        # Hadoop FileSystem configuration for Azure Blob Storage (WASB)
         spark.conf.set(f"fs.azure.account.auth.type.{account_name}.blob.core.windows.net", "SharedKey")
         spark.conf.set(f"fs.azure.account.key.{account_name}.blob.core.windows.net", account_key)
         
-        # Endpoint Mapping logic
+        # Endpoint mapping for local emulator
         blob_endpoint_host = blob_endpoint
         if f"/{account_name}" in blob_endpoint:
              blob_endpoint_host = blob_endpoint.replace(f"/{account_name}", "")
@@ -105,7 +98,7 @@ def create_spark_session(config):
 
         spark.conf.set(f"fs.azure.storage.blob.endpoint.{account_name}.blob.core.windows.net", blob_endpoint_host)
         
-        # Security settings for HTTP/Emulator
+        # Security overrides for non-SSL local development
         spark.conf.set("fs.azure.secure.mode", "false")
         spark.conf.set("fs.azure.always.use.https", "false")
         spark.conf.set("fs.azure.io.compression.enabled", "false")
@@ -114,8 +107,8 @@ def create_spark_session(config):
     else:
         spark = builder.getOrCreate()
 
-    # FIX: Reduce logging verbosity to clean up terminal (INFO logs hidden)
+    # Suppress verbose logging for production-like console output
     spark.sparkContext.setLogLevel("ERROR")
     
-    print("   [SparkSetup] SparkSession created successfully.")
+    print("   [SparkSetup] SparkSession orchestration complete.")
     return spark
