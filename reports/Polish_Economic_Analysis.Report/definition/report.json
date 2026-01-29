@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.1.0/schema.json",
   "themeCollection": {
     "baseTheme": {
       "name": "CY25SU11",
@@ -56,8 +56,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "poland_regions03558501462324959.json",
-          "path": "poland_regions03558501462324959.json",
+          "name": "poland_regions42568823929325916.json",
+          "path": "poland_regions42568823929325916.json",
           "type": "ShapeMap"
         }
       ]

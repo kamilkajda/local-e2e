@@ -1305,7 +1305,7 @@ table _Measures
 		displayFolder: Title
 		lineageTag: 87322d11-6002-4e08-8a96-a15268e5140a
 
-	measure 'Selected Region' = SELECTEDVALUE('Dim_Region'[region], "NATIONAL")
+	measure 'Selected Region' = SELECTEDVALUE('Dim_Region'[Region], "NATIONAL")
 		displayFolder: Title
 		lineageTag: b8eebf7d-7b65-42ba-bbfd-15b8b6593dca
 
@@ -1436,6 +1436,24 @@ table _Measures
 	measure 'Executive Card Header' = UPPER([Selected Region]) & " (" & [Selected Year Number] & ")"
 		displayFolder: Executive Chart Summary
 		lineageTag: b03e0f3b-8e7b-4fc2-ab08-a1a3ec286e46
+
+	measure 'Map Dynamic Color' = ```
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _Gap = [Dynamic Gap %]
+			VAR _IsReverse = _SelectedID IN {1, 7, 11, 13}
+			VAR _Performance = IF(_IsReverse, _Gap * -1, _Gap)
+			
+			RETURN
+			    SWITCH( TRUE(),
+			        ISBLANK(_SelectedID), "#F1F5F9", 
+			        _Performance > 0.01,  "#00A396", 
+			        _Performance < -0.01, "#FB923C",
+			        "#F1F5F9"
+			    )
+			```
+		displayFolder: UI Mapping
+		lineageTag: db46d17c-c57c-4eb9-98d9-445f4a77bd15
 
 	partition _Measures = m
 		mode: import

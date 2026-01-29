@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "322bbd8935200081e717",
   "position": {
-    "x": 871.75360959366571,
+    "x": 875.53697900203531,
     "y": 93.8572519731817,
     "z": 6000,
     "height": 127.46046564259244,
     "width": 194.66689298141389,
-    "tabOrder": 3000
+    "tabOrder": 2000
   },
   "visualGroup": {
     "displayName": "Disposable Income",

@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "e696fc6270c13d288c6b",
   "position": {
-    "x": 478.76872325171814,
+    "x": 490.11883147682647,
     "y": 95.015983479023447,
     "z": 3000,
     "height": 128.61919714843418,
     "width": 194.66689298141389,
-    "tabOrder": 6000
+    "tabOrder": 5000
   },
   "visualGroup": {
     "displayName": "Avg Gross",

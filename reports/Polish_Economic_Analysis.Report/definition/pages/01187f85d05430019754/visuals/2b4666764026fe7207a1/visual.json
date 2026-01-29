@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "2b4666764026fe7207a1",
   "position": {
-    "x": 13.333333333333334,
-    "y": 261.66666666666669,
+    "x": 12.857142857142858,
+    "y": 261.42857142857144,
     "z": 11000,
-    "height": 450,
-    "width": 450,
-    "tabOrder": 9000
+    "height": 450.00000000000006,
+    "width": 477.14285714285717,
+    "tabOrder": 8000
   },
   "visual": {
     "visualType": "scatterChart",
@@ -41,11 +41,11 @@
                       "Entity": "Dim_Region"
                     }
                   },
-                  "Property": "region"
+                  "Property": "Region"
                 }
               },
               "queryRef": "Dim_Region.region",
-              "nativeQueryRef": "region"
+              "nativeQueryRef": "Region"
             }
           ]
         },
@@ -155,6 +155,13 @@
                   "Value": "10D"
                 }
               }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
             }
           }
         }
@@ -200,7 +207,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -242,7 +249,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -284,7 +291,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -326,7 +333,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -368,7 +375,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -410,7 +417,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -452,7 +459,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -494,7 +501,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -536,7 +543,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -578,7 +585,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -620,7 +627,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -662,7 +669,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -704,7 +711,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -746,7 +753,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -788,7 +795,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -830,7 +837,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -872,7 +879,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -1049,7 +1056,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "region"
+                        "Property": "Region"
                       }
                     },
                     "Right": {
@@ -1161,6 +1168,13 @@
                   }
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
             }
           }
         }
@@ -1244,6 +1258,26 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualTooltip": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Default'"
                 }
               }
             }
@@ -1354,62 +1388,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "1b229a54548cfde494b0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Unemployment Rate"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "6931614b89d59b46abe0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Gross Wage"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "e6364a85bb404ba1e1dd",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Dim_Region"
-              }
-            },
-            "Property": "region"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "42d199ce969dcce5baab",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Total Population"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

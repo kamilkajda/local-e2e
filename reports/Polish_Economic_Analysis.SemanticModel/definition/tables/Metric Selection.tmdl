@@ -1,0 +1,314 @@
+table 'Metric Selection'
+	lineageTag: 55970604-7205-4498-b76e-e39bc399b13c
+
+	measure 'Dynamic Gap %' =
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			
+			RETURN
+			    IF(
+			        ISBLANK(_SelectedID),
+			        0,
+			        SWITCH( _SelectedID,
+			            0,  [Avg Gross Wage vs Avg Poland Gap %],
+			            1,  [Avg Unemployment vs Avg Poland Gap %],
+			            2,  [Avg Business Entities vs Avg Poland Gap %],
+			            3,  [Avg GDP per Capita vs Avg Poland Gap %],
+			            6,  [Avg Investment vs Avg Poland Gap %],
+			            7,  [Avg Residential Price vs Avg Poland Gap %],
+			            8,  [Avg Dwellings Completed per 1k vs Avg Poland Gap %],
+			            11, [Avg Household Expenditures vs Avg Poland Gap %],
+			            12, [Avg Household Disposable Income vs Avg Poland Gap %],
+			            13, [Avg Budget Expenditure per capita vs Avg Poland Gap %],
+			            14, [Avg Budget Revenue per capita vs Avg Poland Gap %],
+			            0
+			        )
+			    )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 9cee12cd-0533-4f03-a2a8-5c78cfe1dea5
+
+	measure 'Map Dynamic Title' = ```
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _MetricName = 
+			    MAXX(
+			        FILTER(
+			            ALLSELECTED('Metric Selection'), 
+			            'Metric Selection'[Parameter Order] = _SelectedID
+			        ), 
+			        'Metric Selection'[Metric Selection]
+			    )
+			
+			VAR _SelectedYear = SELECTEDVALUE('Dim_Calendar'[year], "ALL YEARS")
+			
+			RETURN
+			    IF(
+			        ISBLANK(_SelectedID),
+			        "SELECT A METRIC TO START ANALYSIS",
+			        UPPER(_MetricName) & " - REGIONAL VARIANCE VS NATIONAL AVERAGE (" & _SelectedYear & ")"
+			    )
+			```
+		lineageTag: 15941184-91ce-47d3-ba4d-c2b1278ca086
+
+	measure 'Dynamic Performance Score' = ```
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _Gap = [Dynamic Gap %]
+			VAR _IsReverse = _SelectedID IN {1, 7, 11, 13}
+			
+			RETURN
+			    IF(
+			        ISBLANK(_SelectedID), 
+			        0, 
+			        IF(_IsReverse, _Gap * -1, _Gap)
+			    )
+			```
+		lineageTag: 9ce47998-8315-45de-a6fa-67a87a10c1d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Bar Chart Sort Order' =
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _Gap = [Dynamic Gap %]
+			-- Reverse the logic for Unemployment, Prices, and Expenditures
+			VAR _IsReverse = _SelectedID IN {1, 7, 11, 13}
+			
+			RETURN
+			    IF(_IsReverse, _Gap * -1, _Gap)
+		lineageTag: a8a211a6-f3f0-46b6-8210-ee13ca9d7cd8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dynamic Color Status' =
+			
+			VAR _Gap = [Dynamic Gap %]
+			RETURN
+			    SWITCH( TRUE(),
+			        _Gap > 0, "#4E56DE", -- Indigo
+			        _Gap < 0, "#FF4D4D", -- Red
+			        "#E0E0E0"            -- Neutral Gray
+			    )
+		lineageTag: 47a1dd19-a5b2-4c8d-9f99-b4a25491485a
+
+	measure 'Bar Chart Dynamic Title' = ```
+			
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _SelectedYear = SELECTEDVALUE('Dim_Calendar'[year], "ALL YEARS")
+			VAR _MetricName = 
+			    MAXX(
+			        FILTER(
+			            ALLSELECTED('Metric Selection'), 
+			            'Metric Selection'[Parameter Order] = _SelectedID
+			        ), 
+			        'Metric Selection'[Metric Selection]
+			    )
+			
+			RETURN
+			    IF(
+			        ISBLANK(_SelectedID),
+			        "REGIONAL RANKING",
+			        UPPER(_MetricName) & " - REGIONAL RANKING (" & _SelectedYear & ")"
+			    )
+			```
+		lineageTag: 232bfed7-7b86-41de-863f-7961236d1df2
+
+	measure 'Map Executive Summary Text' = ```
+			
+			// Execution context: capture user selection from field parameters and calendar
+			VAR _ID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _Year = SELECTEDVALUE('Dim_Calendar'[year])
+			VAR _IsReverse = _ID IN {1, 7, 11, 13}
+			
+			// Metric metadata retrieval: bypass potential composite key resolution errors
+			VAR _MetricName = 
+			    MAXX(
+			        FILTER(ALLSELECTED('Metric Selection'), 'Metric Selection'[Parameter Order] = _ID), 
+			        'Metric Selection'[Metric Selection]
+			    )
+			
+			// Data materialization: calculate metric values across voivodeship granularity
+			VAR _Table = 
+			    ADDCOLUMNS(
+			        FILTER(ALL('Dim_Region'), 'Dim_Region'[level_type] = "Voivodeship"),
+			        "@Val", [Dynamic Value]
+			    )
+			
+			// Extreme values identification within materialized context
+			VAR _TopValue = MAXX(_Table, [@Val])
+			VAR _BottomValue = MINX(_Table, [@Val])
+			
+			// Region attribution for calculated extremes
+			VAR _MaxRegion = MAXX(FILTER(_Table, [@Val] = _TopValue), 'Dim_Region'[Region])
+			VAR _MinRegion = MAXX(FILTER(_Table, [@Val] = _BottomValue), 'Dim_Region'[Region])
+			
+			// Polarity-based classification of results
+			VAR _BestName = IF(_IsReverse, _MinRegion, _MaxRegion)
+			VAR _BestVal  = IF(_IsReverse, _BottomValue, _TopValue)
+			
+			VAR _WorstName = IF(_IsReverse, _MaxRegion, _MinRegion)
+			VAR _WorstVal  = IF(_IsReverse, _TopValue, _BottomValue)
+			
+			// Dynamic string formatting based on Metric ID mapping
+			VAR _FormatString = 
+			    SWITCH( TRUE(),
+			        _ID IN {1}, "0.0%",
+			        _ID IN {0, 3, 6, 7, 11, 12, 13, 14}, "#,0 PLN",
+			        "#,0.0"
+			    )
+			
+			// Narrative assembly with forced line breaks for Bento UI compatibility
+			RETURN
+			    IF(ISBLANK(_ID) || ISBLANK(_Year), 
+			        "SELECT A METRIC AND YEAR TO VIEW ANALYSIS",
+			        "POLAND REGIONAL ANALYSIS (" & _Year & "):" & UNICHAR(10) & 
+			        "The best performing region for " & _MetricName & " is " & UPPER(_BestName) & 
+			        " with a value of " & FORMAT(_BestVal, _FormatString) & ". " & 
+			        "Conversely, the lowest result is observed in " & UPPER(_WorstName) & 
+			        " (" & FORMAT(_WorstVal, _FormatString) & ")."
+			    )
+			```
+		lineageTag: 0fcb1c77-caca-4278-9585-543f96b78fc5
+
+	measure 'Dynamic Value' =
+			
+			VAR _ID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			
+			RETURN
+			    SWITCH( _ID,
+			        0,  [Avg Gross Wage],
+			        1,  [Avg Unemployment Rate],
+			        2,  [Avg Business Entities per 10k],
+			        3,  [Avg GDP per Capita],
+			        6,  [Avg Investment per Capita],
+			        7,  [Avg Residential Price per m2],
+			        8,  [Avg Dwellings Completed per 1k],
+			        11, [Avg Household Expenditures],
+			        12, [Avg Household Disposable Income],
+			        13, [Avg Budget Expenditure per capita],
+			        14, [Avg Budget Revenue per capita],
+			        BLANK()
+			    )
+		lineageTag: 46818253-7a01-4e97-951f-c9a797b125de
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Tooltip Display Value' =
+			
+			VAR _ID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _Val = [Dynamic Value]
+			
+			RETURN
+			    SWITCH( TRUE(),
+			        ISBLANK(_Val), "No Data",
+			        -- Currency format
+			        _ID IN {0, 3, 6, 7, 11, 12, 13, 14}, FORMAT(_Val, "#,0 PLN"),
+			        -- Percentage format
+			        _ID IN {1}, FORMAT(_Val, "0.0%"),
+			        -- Standard number format
+			        FORMAT(_Val, "#,0.0")
+			    )
+		lineageTag: f50084cd-2f58-434b-b984-15b06f654755
+
+	measure 'Tooltip Metric Label' = ```
+			
+			-- Retrieves the display name of the selected metric for tooltip labels
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			
+			RETURN
+			    MAXX(
+			        FILTER(
+			            ALLSELECTED('Metric Selection'), 
+			            'Metric Selection'[Parameter Order] = _SelectedID
+			        ), 
+			        'Metric Selection'[Metric Selection]
+			    )
+			```
+		lineageTag: 5f0a1162-97db-45e4-8e67-755e58c43d0d
+
+	measure 'Tooltip Gap Display' =
+			
+			-- Formats the percentage gap with a leading plus or minus sign
+			VAR _Gap = [Dynamic Gap %]
+			VAR _Prefix = IF(_Gap > 0, "+", "")
+			
+			RETURN
+			    IF(
+			        ISBLANK(_Gap),
+			        "n/a",
+			        _Prefix & FORMAT(_Gap, "0.0%")
+			    )
+		lineageTag: 53808bcb-b368-4efe-803a-440c5a1cc354
+
+	measure 'Tooltip Gap Metric Label' = ```
+			
+			-- Creates a dynamic label for the variance
+			VAR _SelectedID = SELECTEDVALUE('Metric Selection'[Parameter Order])
+			VAR _MetricName = 
+			    MAXX(
+			        FILTER(
+			            ALLSELECTED('Metric Selection'), 
+			            'Metric Selection'[Parameter Order] = _SelectedID
+			        ), 
+			        'Metric Selection'[Metric Selection]
+			    )
+			
+			RETURN
+			    _MetricName & " vs. National"
+			```
+		lineageTag: 420584ec-eea3-484f-9d5f-93f6ba2a224b
+
+	column 'Metric Selection'
+		lineageTag: 92dcbbb1-4b6c-45ce-a7f9-2d1a834afa5f
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parameter Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Parameter Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Fields'
+		isHidden
+		lineageTag: 58b7b030-3e62-4fa9-acf9-d6c541b3ee38
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parameter Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Order'
+		isHidden
+		formatString: 0
+		lineageTag: 5842f7c3-dcef-460d-ac4a-2fb87e0b5e29
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Metric Selection' = calculated
+		mode: import
+		source =
+				{
+				    ("Avg Gross Wage", NAMEOF('_Measures'[Avg Gross Wage]), 0),
+				    ("Avg Unemployment Rate", NAMEOF('_Measures'[Avg Unemployment Rate]), 1),
+				    ("Avg Business Entities per 10k", NAMEOF('_Measures'[Avg Business Entities per 10k]), 2),
+				    ("Avg GDP per Capita", NAMEOF('_Measures'[Avg GDP per Capita]), 3),
+				    ("Avg Investment per Capita", NAMEOF('_Measures'[Avg Investment per Capita]), 6),
+				    ("Avg Residential Price per m2", NAMEOF('_Measures'[Avg Residential Price per m2]), 7),
+				    ("Avg Dwellings Completed per 1k", NAMEOF('_Measures'[Avg Dwellings Completed per 1k]), 8),
+				    ("Avg Household Expenditures", NAMEOF('_Measures'[Avg Household Expenditures]), 11),
+				    ("Avg Household Disposable Income", NAMEOF('_Measures'[Avg Household Disposable Income]), 12),
+				    ("Avg Budget Expenditure per capita", NAMEOF('_Measures'[Avg Budget Expenditure per capita]), 13),
+				    ("Avg Budget Revenue per capita", NAMEOF('_Measures'[Avg Budget Revenue per capita]), 14)
+				}
+
+	annotation PBI_Id = 8eb01997d945436eb3f480a9f23f067a
+

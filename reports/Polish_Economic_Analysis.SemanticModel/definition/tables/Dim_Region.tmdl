@@ -39,12 +39,12 @@ table Dim_Region
 
 		annotation SummarizationSetBy = Automatic
 
-	column region
+	column Region
 		dataType: string
 		lineageTag: e242dbd4-a4cf-447f-ac00-7caeff8c7475
 		dataCategory: StateOrProvince
 		summarizeBy: none
-		sourceColumn: region
+		sourceColumn: Region
 		sortByColumn: sort_order
 
 		changedProperty = SortByColumn
@@ -55,9 +55,10 @@ table Dim_Region
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"region", "Region"}})
 				in
-				    Source
+				    #"Renamed Columns"
 
 	annotation PBI_NavigationStepName = Navigation
 

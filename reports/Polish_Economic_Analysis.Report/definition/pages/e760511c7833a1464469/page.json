@@ -1,0 +1,106 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "e760511c7833a1464469",
+  "displayName": "Tooltip Metric",
+  "displayOption": "ActualSize",
+  "height": 223,
+  "width": 380,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f87f9f3f578e86577c28",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Metric Selection"
+              }
+            },
+            "Property": "Dynamic Gap %"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "bb211445fbcb62831e6f",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Population"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "8be43e0196ddf2549cf3",
+    "type": "Tooltip",
+    "parameters": [
+      {
+        "name": "864cf025e45a3b553407",
+        "boundFilter": "f87f9f3f578e86577c28",
+        "fieldExpr": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Metric Selection"
+              }
+            },
+            "Property": "Dynamic Gap %"
+          }
+        }
+      },
+      {
+        "name": "612b39587ec585da49fa",
+        "boundFilter": "bb211445fbcb62831e6f",
+        "fieldExpr": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Population"
+          }
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "displayArea": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "type": "Tooltip"
+}

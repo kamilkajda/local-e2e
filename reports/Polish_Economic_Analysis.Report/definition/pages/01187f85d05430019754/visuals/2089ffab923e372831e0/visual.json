@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "2089ffab923e372831e0",
   "position": {
     "x": 1067.6666870117188,
@@ -7,7 +7,7 @@
     "z": 7000,
     "height": 130,
     "width": 195,
-    "tabOrder": 11000
+    "tabOrder": 10000
   },
   "visualGroup": {
     "displayName": "Total Population",

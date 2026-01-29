@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "517fafc0d8c23d2d3400",
   "position": {
-    "x": 126.66666666666667,
-    "y": 61.666666666666671,
+    "x": 110.79614836160297,
+    "y": 61.428571428571431,
     "z": 2000,
     "height": 200,
-    "width": 150,
-    "tabOrder": 1000
+    "width": 188.57142857142858,
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "advancedSlicerVisual",
@@ -23,11 +23,11 @@
                       "Entity": "Dim_Region"
                     }
                   },
-                  "Property": "region"
+                  "Property": "Region"
                 }
               },
               "queryRef": "Dim_Region.region",
-              "nativeQueryRef": "region"
+              "nativeQueryRef": "Region"
             }
           ]
         }
@@ -59,7 +59,7 @@
                                   "Source": "d"
                                 }
                               },
-                              "Property": "region"
+                              "Property": "Region"
                             }
                           }
                         ],
@@ -67,7 +67,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'MAZOWIECKIE'"
+                                "Value": "'DOLNOŚLĄSKIE'"
                               }
                             }
                           ]
@@ -135,11 +135,18 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "9D"
                 }
               }
             },
             "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "textWrap": {
               "expr": {
                 "Literal": {
                   "Value": "true"
@@ -375,6 +382,24 @@
           },
           "selector": {
             "id": "interaction:press"
+          }
+        },
+        {
+          "properties": {
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E2E8F0'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "selection:selected"
           }
         }
       ],
@@ -697,24 +722,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fb6751d86657ca8b3b3f",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Dim_Region"
-              }
-            },
-            "Property": "region"
-          }
-        },
-        "type": "Categorical"
-      }
-    ],
-    "filterSortOrder": "Ascending"
   }
 }

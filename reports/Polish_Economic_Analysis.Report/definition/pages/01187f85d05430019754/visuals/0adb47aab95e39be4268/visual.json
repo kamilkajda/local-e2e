@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "0adb47aab95e39be4268",
   "position": {
-    "x": 883.33333333333337,
-    "y": 261.66666666666669,
+    "x": 890,
+    "y": 261.42857142857144,
     "z": 10000,
-    "height": 256.66666666666669,
+    "height": 257.14285714285717,
     "width": 370,
-    "tabOrder": 8000
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -610,51 +610,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "ac7da1ede934c222b129",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Chart_Axis_Years"
-              }
-            },
-            "Property": "Year"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "a9510741d91b481dbff1",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Gross Wage (Trend)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "34c6274c44026ad92f4f",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Measures"
-              }
-            },
-            "Property": "Avg Residential Price per m2 (Trend)"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

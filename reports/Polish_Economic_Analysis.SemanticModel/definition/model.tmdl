@@ -19,6 +19,7 @@ ref table Dim_Region
 ref table Fact_Economics
 ref table _Measures
 ref table Chart_Axis_Years
+ref table 'Metric Selection'
 
 ref cultureInfo en-US
 

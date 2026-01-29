@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
   "name": "68d6603d16a21d1c0591",
   "position": {
-    "x": 281.69691432782349,
+    "x": 296.83039196130119,
     "y": 93.8572519731817,
     "z": 5000,
     "height": 127.46046564259244,
     "width": 195.82562448725565,
-    "tabOrder": 5000
+    "tabOrder": 4000
   },
   "visualGroup": {
     "displayName": "GDP per Capita",
