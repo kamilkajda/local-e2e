@@ -23,7 +23,7 @@
                       "Entity": "Dim_Region"
                     }
                   },
-                  "Property": "Region"
+                  "Property": "region"
                 }
               },
               "queryRef": "Dim_Region.region",
@@ -59,7 +59,7 @@
                                   "Source": "d"
                                 }
                               },
-                              "Property": "Region"
+                              "Property": "region"
                             }
                           }
                         ],

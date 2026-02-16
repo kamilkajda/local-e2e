@@ -23,11 +23,11 @@
                       "Entity": "Dim_Region"
                     }
                   },
-                  "Property": "Region"
+                  "Property": "region"
                 }
               },
               "queryRef": "Dim_Region.region",
-              "nativeQueryRef": "region",
+              "nativeQueryRef": "region1",
               "active": true
             }
           ]

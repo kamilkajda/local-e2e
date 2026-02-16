@@ -41,11 +41,12 @@
                       "Entity": "Dim_Region"
                     }
                   },
-                  "Property": "Region"
+                  "Property": "region"
                 }
               },
               "queryRef": "Dim_Region.region",
-              "nativeQueryRef": "Region"
+              "nativeQueryRef": "Region",
+              "displayName": "Region"
             }
           ]
         },
@@ -207,7 +208,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -249,7 +250,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -291,7 +292,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -333,7 +334,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -375,7 +376,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -417,7 +418,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -459,7 +460,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -501,7 +502,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -543,7 +544,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -585,7 +586,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -627,7 +628,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -669,7 +670,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -711,7 +712,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -753,7 +754,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -795,7 +796,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -837,7 +838,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -879,7 +880,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {
@@ -1056,7 +1057,7 @@
                             "Entity": "Dim_Region"
                           }
                         },
-                        "Property": "Region"
+                        "Property": "region"
                       }
                     },
                     "Right": {

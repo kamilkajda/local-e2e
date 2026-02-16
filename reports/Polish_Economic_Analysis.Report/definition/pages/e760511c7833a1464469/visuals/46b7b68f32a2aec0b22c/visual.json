@@ -25,14 +25,15 @@
                           "Entity": "Dim_Region"
                         }
                       },
-                      "Property": "Region"
+                      "Property": "region"
                     }
                   },
                   "Function": 3
                 }
               },
               "queryRef": "Min(Dim_Region.region)",
-              "nativeQueryRef": "First region"
+              "nativeQueryRef": "Region",
+              "displayName": "Region"
             },
             {
               "field": {

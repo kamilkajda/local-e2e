@@ -139,8 +139,8 @@ table 'Metric Selection'
 			VAR _BottomValue = MINX(_Table, [@Val])
 			
 			// Region attribution for calculated extremes
-			VAR _MaxRegion = MAXX(FILTER(_Table, [@Val] = _TopValue), 'Dim_Region'[Region])
-			VAR _MinRegion = MAXX(FILTER(_Table, [@Val] = _BottomValue), 'Dim_Region'[Region])
+			VAR _MaxRegion = MAXX(FILTER(_Table, [@Val] = _TopValue), 'Dim_Region'[region])
+			VAR _MinRegion = MAXX(FILTER(_Table, [@Val] = _BottomValue), 'Dim_Region'[region])
 			
 			// Polarity-based classification of results
 			VAR _BestName = IF(_IsReverse, _MinRegion, _MaxRegion)

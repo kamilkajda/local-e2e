@@ -1305,7 +1305,7 @@ table _Measures
 		displayFolder: Title
 		lineageTag: 87322d11-6002-4e08-8a96-a15268e5140a
 
-	measure 'Selected Region' = SELECTEDVALUE('Dim_Region'[Region], "NATIONAL")
+	measure 'Selected Region' = SELECTEDVALUE('Dim_Region'[region], "NATIONAL")
 		displayFolder: Title
 		lineageTag: b8eebf7d-7b65-42ba-bbfd-15b8b6593dca
 
@@ -1364,7 +1364,7 @@ table _Measures
 
 	measure 'Scatter Marker Color' = ```
 			
-			VAR _CurrentBubble = SELECTEDVALUE('Dim_Region'[Region])
+			VAR _CurrentBubble = SELECTEDVALUE('Dim_Region'[region])
 			VAR _SelectedInSlicer = [Selected Region] -- Your existing measure
 			RETURN 
 			    IF(
