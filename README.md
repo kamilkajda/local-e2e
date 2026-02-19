@@ -6,7 +6,8 @@ Only the Executive Summary Completed, Report is actively worked on.
 **Backlog and roadmap are now dynamically managed by local AI Agents.**
 
 ## 🤖 Agentic Orchestration & AI Development
-The project features a **local Multi-Agent System** that acts as a technical co-pilot for project management and requirements engineering.
+[!WARNING]
+> **Conceptual Proof of Concept:** The agentic system implemented in this project is an experimental layer designed to explore AI-driven project management. Local models (Llama 3.1 8B) used for the **Developer Agent** are prone to hallucinations (e.g., inventing non-existent PySpark methods like `checkSchema`). They serve as a "Stochastic Parrot" to demonstrate the *potential* of automation, not as a reliable production-ready code generator in this scenario.
 
 * **Analyst Agent:** Performs deep-scans of source code, infrastructure scripts (Azurite), and configuration files. It includes a **Secret Scrubber** to redact sensitive keys (like in `settings.json`) before processing.
 * **Product Owner Agent:** Transforms raw ideas into **Gherkin-compliant User Stories** and prioritizes them using the **RICE Framework**.
