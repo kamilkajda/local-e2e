@@ -1,8 +1,9 @@
 import os
 
+
 def generate_readme():
     """
-    Programmatically creates the project README.md file with the 
+    Programmatically creates the project README.md file with the
     latest professional project documentation, including the live Power BI link.
     """
     # 1. Path Resolution
@@ -88,6 +89,7 @@ This project was developed in collaboration with **Google Gemini 2.5 Flash Previ
         print(f"[OK] README.md generated successfully at: {readme_path}")
     except Exception as e:
         print(f"[ERROR] Failed to generate README: {e}")
+
 
 if __name__ == "__main__":
     generate_readme()

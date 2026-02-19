@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: local-e2e
+Version: 0.1.0
+Summary: GUS ETL AI-augmented project
+Requires-Dist: ollama
+Requires-Dist: pytest
+Requires-Dist: black
+Requires-Dist: flake8
+Requires-Dist: isort

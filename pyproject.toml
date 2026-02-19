@@ -1,0 +1,26 @@
+[project]
+name = "local-e2e"
+version = "0.1.0"
+description = "GUS ETL AI-augmented project"
+dependencies = [
+    "ollama"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8",
+    "isort"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.black]
+line-length = 100

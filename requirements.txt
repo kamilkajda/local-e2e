@@ -6,3 +6,5 @@ requests
 azure-storage-blob
 matplotlib
 jupyter
+ollama
+pytest

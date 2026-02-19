@@ -1,0 +1,3 @@
+- Implement schema validation in PySpark to prevent corrupt Parquet files.
+- Add a 'What-If' parameter for inflation adjustments in the Power BI report.
+- Optimize Spark shuffle partitions for better local performance on large datasets.

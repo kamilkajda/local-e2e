@@ -1,0 +1,28 @@
+[flake8]
+# Align with Black formatter line length configuration
+max-line-length = 100
+
+# Suppress errors that conflict with Black's formatting philosophy
+# E203: whitespace before ':'
+# W503: line break before binary operator
+# E501: line length (redundant but kept for consistency with max-line-length)
+extend-ignore = E203, W503
+
+# Directories to ignore during linting
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .venv,
+    dist,
+    build,
+    exploration,
+    docs,
+    tests/mocks
+
+# Enforce maximum McCabe cyclomatic complexity
+max-complexity = 10
+
+# Display summary statistics and error counts upon completion
+statistics = True
+count = True

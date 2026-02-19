@@ -1,0 +1,7 @@
+Timestamp,Feature,Reach,Impact,Confidence,Effort,Score
+2026-02-19 12:03,Schema Validation,8,1.5,0.8,4,38.4
+2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7,2.5,1.0,6,84.9
+2026-02-19 12:03,Optimized Spark Shuffle Partitions,9,3.0,0.5,8,102
+2026-02-19 12:03,Optimized Spark Shuffle Partitions,9,3.0,0.5,8,102
+2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7,2.5,1.0,6,84.9
+2026-02-19 12:03,Schema Validation,8,1.5,0.8,4,38.4
