@@ -1,16 +1,21 @@
-def add_inflation_adjustment(df: DataFrame, inflation_rate: float) -> DataFrame:
+```python
+def validate_schema(df: DataFrame, schema_path: str):
     """
-    Adds a 'What-If' parameter for inflation adjustments in the Power BI report.
-
-    Parameters:
-    df (DataFrame): Fact table with metrics and values.
-    inflation_rate (float): Rate of inflation adjustment. Defaults to 1.0 if not provided.
-
+    Validates PySpark DataFrame against a specified Parquet schema.
+    
+    Args:
+        df (DataFrame): Input DataFrame to validate.
+        schema_path (str): Path to the target Parquet schema file.
+        
     Returns:
-    DataFrame: Fact table with adjusted values.
+        DataFrame: The input DataFrame if valid; otherwise raises an exception.
     """
-    # Apply inflation adjustment to fact table
-    return df.withColumn(
-        "adjusted_value",
-        F.when(F.col("value") != 0, F.col("value") * (1 + inflation_rate)).otherwise(0),
-    )
+
+    # Load the target Parquet schema
+    from pyspark.sql import read
+
+    schema = read.schema().load(schema_path)
+
+    # Validate the DataFrame against the loaded schema
+    return df.checkSchema(schema)
+```

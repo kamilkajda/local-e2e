@@ -1,121 +1,92 @@
 import os
+import textwrap
 import pandas as pd
 import ollama
-import textwrap
+
+# Configuration aligned with BacklogOrchestrator output
+MODEL_NAME = "llama3.1"
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+PROJECT_HISTORY_PATH = os.path.join(PROJECT_ROOT, "docs/project_history.csv")
 
 
-class DeveloperAgent:
+def get_top_priority_task():
     """
-    Automates PySpark code generation based on the LATEST RICE-prioritized backlog.
-    Includes state management and chronological filtering.
+    Selects the highest-scoring feature from the project history CSV.
     """
+    if not os.path.exists(PROJECT_HISTORY_PATH):
+        return None
 
-    def __init__(self, model="llama3.1"):
-        self.model = model
-        self.history_path = "docs/project_history.csv"
-
-    def get_top_task(self):
-        """Finds the best pending task from the most recent backlog run."""
-        if not os.path.exists(self.history_path):
-            print("[!] History file not found.")
+    try:
+        df = pd.read_csv(PROJECT_HISTORY_PATH)
+        if df.empty:
             return None
 
-        df = pd.read_csv(self.history_path)
+        # Sort by Score descending and pick the top one
+        top_task = df.sort_values(by="Score", ascending=False).iloc[0]
+        return top_task
+    except Exception as e:
+        print(f"[!] Error reading history: {e}")
+        return None
 
-        # 1. Convert Timestamp to datetime for reliable sorting
-        df["Timestamp"] = pd.to_datetime(df["Timestamp"])
 
-        # 2. Initialize Status column if missing
-        if "Status" not in df.columns:
-            df["Status"] = "Pending"
-
-        # 3. Focus on the newest session (latest timestamp)
-        latest_ts = df["Timestamp"].max()
-
-        # 4. Sort: newest first, then highest Score
-        df = df.sort_values(by=["Timestamp", "Score"], ascending=[False, False])
-
-        # 5. Filter for the first pending task from the latest run
-        # Note: We look at 'Pending' overall, but prioritize the latest entries
-        pending_tasks = df[df["Status"] == "Pending"]
-
-        if pending_tasks.empty:
-            return None
-
-        task_idx = pending_tasks.index[0]
-        task_data = pending_tasks.iloc[0].to_dict()
-        return task_data, task_idx
-
-    def update_task_status(self, index, status="In Progress"):
-        """Updates the status in CSV to prevent re-processing."""
-        df = pd.read_csv(self.history_path)
-        # Ensure column exists before update
-        if "Status" not in df.columns:
-            df["Status"] = "Pending"
-        df.at[index, "Status"] = status
-        df.to_csv(self.history_path, index=False)
-
-    def generate_implementation(self, task, context_code):
-        """Generates code block using local LLM."""
-
-        system_prompt = (
-            "You are a Senior Data Engineer specializing in PySpark. "
-            "Write professional code. Max line length: 100 characters. "
-            "Comments in English. Return ONLY the code block without markdown tags."
-        )
-
-        # Mapping 'Feature' as the main task description based on your CSV structure
-        feature_desc = task.get("Feature", "New Transformation")
-
-        user_prompt = (
-            textwrap.dedent(
-                """
-            TASK: {feature}
-            GOAL: Implement this as a PySpark transformation.
-            
-            EXISTING CONTEXT (transformer.py):
-            {context}
-
-            INSTRUCTION:
-            Provide only the Python function or logic to be added.
+def generate_code_skeleton(feature_name):
+    """
+    Invokes local LLM to generate a professional PySpark code skeleton.
+    """
+    system_prompt = textwrap.dedent(
         """
-            )
-            .strip()
-            .format(feature=feature_desc, context=context_code)
+        ROLE: Senior Data Engineer (PySpark Expert).
+        STRICT RULES:
+        1. Use ONLY standard PySpark 3.4.1 API. Do not invent methods.
+        2. Format: Black-compliant (max-line-length = 100).
+        3. Quality: PEP 8 compliant, professional docstrings, English comments.
+        4. No educational chatter. Output only pure, production-ready code.
+    """
+    )
+
+    user_prompt = f"TASK: Generate a PySpark module for the following feature: {feature_name}"
+
+    try:
+        response = ollama.chat(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
         )
+        return response["message"]["content"]
+    except Exception as e:
+        return f"# Error generating code: {e}"
 
-        response = ollama.generate(model=self.model, system=system_prompt, prompt=user_prompt)
-        return response["response"]
 
-    def run(self):
-        """Orchestrates development process for the next prioritized task."""
-        print("--- Developer Agent: Starting Code Generation ---")
+def main():
+    print("[Developer Agent] Analyzing prioritized backlog...")
+    task = get_top_priority_task()
 
-        result = self.get_top_task()
-        if not result:
-            print("[!] No pending tasks found in the latest backlog.")
-            return
+    if task is None:
+        print("[!] No prioritized features found. Run BacklogOrchestrator first.")
+        return
 
-        task, idx = result
-        print(f"> Selected Task: {task['Feature']} (Score: {task['Score']})")
-        print(f"> Timestamp: {task['Timestamp']}")
+    # Using 'Feature' and 'Score' as defined in your Orchestrator
+    feature_name = task["Feature"]
+    score = task["Score"]
 
-        with open("src/pyspark/transformer.py", "r", encoding="utf-8") as f:
-            context = f.read()
+    print(f"[Developer Agent] Selected Feature: {feature_name} (RICE Score: {score})")
 
-        proposal = self.generate_implementation(task, context)
+    skeleton = generate_code_skeleton(feature_name)
 
-        output_path = "docs/developer_proposal.py"
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(proposal)
+    # Persistence
+    output_dir = os.path.join(PROJECT_ROOT, "docs/generated_code")
+    os.makedirs(output_dir, exist_ok=True)
 
-        # Mark as In Progress so the next 'Play' takes the NEXT best task
-        self.update_task_status(idx, "In Progress")
+    safe_name = feature_name.lower().replace(" ", "_")[:30]
+    output_path = os.path.join(output_dir, f"feat_{safe_name}.py")
 
-        print(f"[SUCCESS] Code generated at: {output_path}")
-        print(f"[STATUS] Task marked as 'In Progress' in project_history.csv")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(skeleton)
+
+    print(f"[+] Technical skeleton generated: {output_path}")
 
 
 if __name__ == "__main__":
-    agent = DeveloperAgent()
-    agent.run()
+    main()
