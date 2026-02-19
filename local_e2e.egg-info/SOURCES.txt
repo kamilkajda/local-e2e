@@ -6,6 +6,7 @@ local_e2e.egg-info/dependency_links.txt
 local_e2e.egg-info/requires.txt
 local_e2e.egg-info/top_level.txt
 src/ai_agent/backlog_orchestrator.py
+src/ai_agent/developer_agent.py
 src/pyspark/__init__.py
 src/pyspark/gus_client.py
 src/pyspark/loader.py

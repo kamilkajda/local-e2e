@@ -1,7 +1,16 @@
-Timestamp,Feature,Reach,Impact,Confidence,Effort,Score
-2026-02-19 12:03,Schema Validation,8,1.5,0.8,4,38.4
-2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7,2.5,1.0,6,84.9
-2026-02-19 12:03,Optimized Spark Shuffle Partitions,9,3.0,0.5,8,102
-2026-02-19 12:03,Optimized Spark Shuffle Partitions,9,3.0,0.5,8,102
-2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7,2.5,1.0,6,84.9
-2026-02-19 12:03,Schema Validation,8,1.5,0.8,4,38.4
+Timestamp,Feature,Reach,Impact,Confidence,Effort,Score,Status
+2026-02-19 12:03,Schema Validation,8.0,1.5,0.8,4.0,38.4,Pending
+2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7.0,2.5,1.0,6.0,84.9,Pending
+2026-02-19 12:03,Optimized Spark Shuffle Partitions,9.0,3.0,0.5,8.0,102.0,Pending
+2026-02-19 12:03,Optimized Spark Shuffle Partitions,9.0,3.0,0.5,8.0,102.0,Pending
+2026-02-19 12:03,'What-If' Parameter for Inflation Adjustments,7.0,2.5,1.0,6.0,84.9,Pending
+2026-02-19 12:03,Schema Validation,8.0,1.5,0.8,4.0,38.4,Pending
+2026-02-19 14:11,Schema validation in PySpark,0.8,0.7,0.9,10.0,0.05,Pending
+2026-02-19 14:11,Add a 'What-If' parameter for inflation adjustments in Power BI report,0.6,0.5,0.8,12.0,0.02,Pending
+2026-02-19 14:11,Optimize Spark shuffle partitions for better local performance on large datasets,0.9,0.8,0.7,15.0,0.03,Pending
+2026-02-19 14:24,Optimize Spark shuffle partitions for better local performance on large datasets.,0.8,0.9,0.95,80.0,0.01,Pending
+2026-02-19 14:24,Implement schema validation in PySpark to prevent corrupt Parquet files.,0.7,0.85,0.9,60.0,0.01,Pending
+2026-02-19 14:24,Add a 'What-If' parameter for inflation adjustments in the Power BI report.,0.5,0.75,0.8,40.0,0.01,Pending
+2026-02-19 14:33,Implement schema validation in PySpark to prevent corrupt Parquet files,0.8,0.9,0.95,10.0,0.07,Pending
+2026-02-19 14:33,Add a 'What-If' parameter for inflation adjustments in the Power BI report,0.6,0.8,0.9,5.0,0.09,In Progress
+2026-02-19 14:33,Optimize Spark shuffle partitions for better local performance on large datasets,0.4,0.7,0.85,15.0,0.02,Pending

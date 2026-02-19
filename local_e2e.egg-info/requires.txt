@@ -1,4 +1,6 @@
 ollama
+
+[dev]
 pytest
 black
 flake8
