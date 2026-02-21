@@ -1,0 +1,29 @@
+flowchart TD
+    subgraph Input
+        UI[User Ideas<br>backlog_ideas.txt]
+        SC[Source Code & Configs<br>src/ & configs/]
+    end
+
+    subgraph "Project Reader Agent"
+        R1[Read Files]
+        R2[Scrub Secrets]
+        R3[Extract Context via Llama 3.1]
+    end
+
+    subgraph "Product Owner Agent"
+        P1[Generate Backlog<br>Gherkin & RICE]
+        P2[Prioritize Features via Llama 3.1]
+    end
+
+    subgraph Output
+        H[Update History Log<br>project_history.csv]
+    end
+    
+    UI --> R1
+    SC --> R1
+    R1 --> R2
+    R2 --> R3
+    R3 -- Clean Context --> P1
+    UI --> P1
+    P1 --> P2
+    P2 -- Prioritized Backlog Markdown --> H

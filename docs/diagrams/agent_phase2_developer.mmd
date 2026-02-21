@@ -1,0 +1,17 @@
+flowchart TD
+    subgraph Input
+        H2[Project History<br>project_history.csv]
+    end
+
+    subgraph "Developer Agent"
+        D1[Get Top Priority Task<br>Sort by Score DESC]
+        D2[Generate Code Skeleton via Llama 3.1<br>PySpark boilerplate]
+    end
+
+    subgraph Output
+        Out[Save Code<br>docs/generated_code/feat_name.py]
+    end
+    
+    H2 --> D1
+    D1 -- Top Feature Name --> D2
+    D2 -- Generated Skeleton --> Out

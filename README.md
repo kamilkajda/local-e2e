@@ -16,6 +16,10 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 * **Developer Agent (PoC):** Generates PySpark code skeletons based on prioritized tasks to demonstrate automated development workflows.
 * **Performance Monitoring:** Every agentic interaction is measured (Performance Monitor) to optimize execution across different hardware profiles (**RTX 5070 Ti** vs **RTX 3070 Laptop**).
 
+### Agent Workflows
+* [View Phase 1: Context & Backlog Generation Diagram](./docs/diagrams/agent_phase1_backlog.mmd)
+* [View Phase 2: Code Generation Diagram](./docs/diagrams/agent_phase2_developer.mmd)
+
 ## Project Overview
 This project demonstrates a professional end-to-end data engineering pipeline built in a local environment to simulate a production cloud-scale architecture. The system extracts, transforms, and visualizes regional economic disparities in Poland using data from the Statistics Poland (GUS) BDL API.
 
@@ -132,3 +136,7 @@ graph TD
     AZ --> CUR
     
     CUR -->|HTTP/WASB| PBI
+
+
+### Data Model
+* [View Detailed Star Schema (Entity-Relationship Diagram)](./docs/diagrams/data_model.mmd)
