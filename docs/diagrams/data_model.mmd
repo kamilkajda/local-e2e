@@ -1,0 +1,29 @@
+erDiagram
+    fact_economics {
+        string region_id FK
+        int metric_id FK
+        int year FK
+        double value
+    }
+
+    dim_region {
+        string region_id PK
+        string region "e.g., NATIONAL or Voivodeship name"
+        int sort_order "0 for Country, 1 for others"
+        string level_type "Country or Voivodeship"
+    }
+
+    dim_metrics {
+        int metric_id PK
+        string metric_name
+        string description
+    }
+
+    dim_calendar {
+        int year PK
+        int decade
+    }
+
+    fact_economics }|--|| dim_region : "located_in"
+    fact_economics }|--|| dim_metrics : "measures"
+    fact_economics }|--|| dim_calendar : "recorded_in"

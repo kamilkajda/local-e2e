@@ -1,0 +1,47 @@
+sequenceDiagram
+    autonumber
+    
+    box Local Environment
+        participant User
+        participant BO as BacklogOrchestrator
+        participant DevA as DeveloperAgent
+    end
+    
+    box Multi-Agent System
+        participant PRA as ProjectReaderAgent
+        participant POA as ProductOwnerAgent
+        participant LLM as Llama 3.1 (Ollama)
+    end
+    
+    box File System
+        participant Ideas as backlog_ideas.txt
+        participant Src as src/ & configs/
+        participant Hist as project_history.csv
+        participant Out as docs/generated_code/
+    end
+
+    %% Phase 1: Context & Backlog Generation
+    User->>BO: Run backlog_orchestrator.py
+    BO->>Ideas: Read user ideas
+    BO->>PRA: get_context()
+    PRA->>Src: Scan files & read contents
+    PRA->>PRA: _scrub_secrets()
+    PRA->>LLM: Analyze Context (FILE_STRUCTURE, CONFIGS, README)
+    LLM-->>PRA: Return technical context assessment
+    PRA-->>BO: Return scrubbed context
+    
+    BO->>POA: generate_backlog(context, user_ideas)
+    POA->>LLM: Prioritize features using RICE (Gherkin format)
+    LLM-->>POA: Return Prioritized Backlog Markdown
+    POA-->>BO: Return generated report
+    
+    BO->>Hist: _update_history_log() (Parse & Save RICE scores)
+    
+    %% Phase 2: Code Generation
+    User->>DevA: Run developer_agent.py
+    DevA->>Hist: get_top_priority_task() (Sort by Score DESC)
+    Hist-->>DevA: Return top feature name
+    DevA->>LLM: generate_code_skeleton(feature_name)
+    LLM-->>DevA: Return PySpark boilerplate
+    DevA->>Out: Save feat_name.py
+    DevA-->>User: Process Complete

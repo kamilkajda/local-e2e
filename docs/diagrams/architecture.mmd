@@ -1,0 +1,37 @@
+graph TD
+    subgraph Data Extraction
+        API[GUS BDL API<br>REST / JSON]
+        GC[GusClient<br>Pagination & Rate Limiting]
+        RAW[(Local Raw Layer<br>/data/raw/*.json)]
+    end
+
+    subgraph Data Processing
+        SP[PySpark Engine<br>WinUtils / WASB]
+        T_FLAT[Flattener & Parser]
+        T_IMPUTE[Missing Value Imputation<br>Linear Interpolation]
+        T_DIM[Dimension Builder]
+    end
+
+    subgraph Data Persistence
+        STG[(Local Staging<br>/data/staging/)]
+        AZ[Azurite Emulator<br>Blob Storage]
+        CUR[(Curated Zone<br>data.parquet)]
+    end
+
+    subgraph Consumption
+        PBI[Power BI Desktop<br>Web Connector]
+    end
+
+    API -->|HTTP GET| GC
+    GC -->|Save JSON| RAW
+    RAW -->|Read MultiLine| SP
+    
+    SP --> T_FLAT
+    T_FLAT --> T_IMPUTE
+    T_IMPUTE --> T_DIM
+    
+    T_DIM -->|coalesce 1| STG
+    STG -->|BlobServiceClient<br>Cloud Sync| AZ
+    AZ --> CUR
+    
+    CUR -->|HTTP/WASB| PBI
