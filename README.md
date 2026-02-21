@@ -136,7 +136,7 @@ graph TD
     AZ --> CUR
     
     CUR -->|HTTP/WASB| PBI
-
+```
 
 ### Data Model
 * [View Detailed Star Schema (Entity-Relationship Diagram)](./docs/diagrams/data_model.mmd)
