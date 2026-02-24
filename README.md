@@ -2,9 +2,6 @@
 
 ### 🚀 [View Interactive Report (Power BI)](https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9) 
 
-Only the Executive Summary Completed, Report is actively worked on.
-**Backlog and roadmap are now dynamically managed by local AI Agents.**
-
 ## Project Overview
 This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
 
@@ -137,7 +134,7 @@ graph TD
     AZ --> CUR
     
     CUR -->|HTTP/WASB| PBI
-'''
+```
 
 ## Data Model
 * **[View Detailed Star Schema (Entity-Relationship Diagram)](./docs/diagrams/data_model.mmd)**
