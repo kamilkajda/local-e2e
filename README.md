@@ -5,11 +5,23 @@
 Only the Executive Summary Completed, Report is actively worked on.
 **Backlog and roadmap are now dynamically managed by local AI Agents.**
 
+## Project Overview
+This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
+
+**Key Technical Pillars:**
+* **Cloud Simulation:** Full Azure Data Lake simulation using Azurite (Blob Storage) and local PySpark on Windows.
+* **Local LLM Integration:** Powered by **Ollama** and **Llama 3.1**, allowing for private, offline project orchestration and decision-making.
+* **Infrastructure Portability:** Automated environment normalization (WinUtils/Hadoop integration) for seamless execution across multiple machines (Laptop/Desktop).
+* **Data Quality & Imputation:** Advanced transformation logic implementing linear interpolation to fill data gaps or confidential records (e.g., Opolskie 2023).
+* **Professional Tooling:** Strict enforcement of code style using **Black** (formatter) and **Flake8** (linter), with unit tests powered by **Pytest**.
+* **Business Intelligence:** Enterprise-grade Power BI reporting featuring a Bento Grid layout, multi-page navigation, and dynamic DAX narratives.
+
 ## 🤖 Agentic Orchestration & AI Development
-The project features a **local Multi-Agent System** that acts as a technical co-pilot for project management and requirements engineering.
 
 > [!WARNING]
-> **Conceptual Proof of Concept:** The Developer Agent demonstrates the limits of local LLMs (like Llama 3.1 8B). It serves as a "Stochastic Parrot" to showcase automated development workflows, but it is prone to hallucinating non-existent PySpark methods.
+> **Conceptual Proof of Concept:** The agentic system implemented in this project is an experimental layer designed to explore AI-driven project management. Local models (Llama 3.1 8B) used for the **Developer Agent** are prone to hallucinations (e.g., inventing non-existent PySpark methods like `checkSchema`). They serve as a "Stochastic Parrot" to demonstrate the *potential* of automation, not as a reliable production-ready code generator in this scenario.
+
+The project features a **local Multi-Agent System** that acts as a technical co-pilot for project management and requirements engineering:
 
 * **Analyst Agent:** Performs deep-scans of source code, infrastructure scripts (Azurite), and configuration files. It includes a **Secret Scrubber** to redact sensitive keys (like in `settings.json`) before processing.
 * **Product Owner Agent:** Transforms raw ideas into **Gherkin-compliant User Stories** and prioritizes them using the **RICE Framework**.
@@ -19,17 +31,6 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 ### Agent Workflows
 * [View Phase 1: Context & Backlog Generation Diagram](./docs/diagrams/agent_phase1_backlog.mmd)
 * [View Phase 2: Code Generation Diagram](./docs/diagrams/agent_phase2_developer.mmd)
-
-## Project Overview
-This project demonstrates a professional end-to-end data engineering pipeline built in a local environment to simulate a production cloud-scale architecture. The system extracts, transforms, and visualizes regional economic disparities in Poland using data from the Statistics Poland (GUS) BDL API.
-
-**Key Technical Pillars:**
-* **Cloud Simulation:** Full Azure Data Lake simulation using Azurite (Blob Storage) and local PySpark on Windows.
-* **Local LLM Integration:** Powered by **Ollama** and **Llama 3.1**, allowing for private, offline project orchestration and decision-making.
-* **Infrastructure Portability:** Automated environment normalization (WinUtils/Hadoop integration) for seamless execution across multiple machines (Laptop/Desktop).
-* **Data Quality & Imputation:** Advanced transformation logic implementing linear interpolation to fill data gaps or confidential records (e.g., Opolskie 2023).
-* **Professional Tooling:** Strict enforcement of code style using **Black** (formatter) and **Flake8** (linter), with unit tests powered by **Pytest**.
-* **Business Intelligence:** Enterprise-grade Power BI reporting featuring a Bento Grid layout, multi-page navigation, and dynamic DAX narratives.
 
 ## Architecture & Workflow
 1. **Source:** Statistics Poland API (GUS BDL).
@@ -96,3 +97,47 @@ This project was developed in collaboration with **Gemini 3.1 Pro**. The AI serv
 * Designing complex DAX measures for economic benchmarking.
 * Building a **Multi-Agent Orchestrator** for automated backlog management.
 * Implementing **Secret Scrubbing** and professional code quality standards (Black/Flake8).
+
+## Architecture Diagram
+```mermaid
+graph TD
+    subgraph Data Extraction
+        API[GUS BDL API<br>REST / JSON]
+        GC[GusClient<br>Pagination & Rate Limiting]
+        RAW[(Local Raw Layer<br>/data/raw/*.json)]
+    end
+
+    subgraph Data Processing
+        SP[PySpark Engine<br>WinUtils / WASB]
+        T_FLAT[Flattener & Parser]
+        T_IMPUTE[Missing Value Imputation<br>Linear Interpolation]
+        T_DIM[Dimension Builder]
+    end
+
+    subgraph Data Persistence
+        STG[(Local Staging<br>/data/staging/)]
+        AZ[Azurite Emulator<br>Blob Storage]
+        CUR[(Curated Zone<br>data.parquet)]
+    end
+
+    subgraph Consumption
+        PBI[Power BI Desktop<br>Web Connector]
+    end
+
+    API -->|HTTP GET| GC
+    GC -->|Save JSON| RAW
+    RAW -->|Read MultiLine| SP
+    
+    SP --> T_FLAT
+    T_FLAT --> T_IMPUTE
+    T_IMPUTE --> T_DIM
+    
+    T_DIM -->|coalesce 1| STG
+    STG -->|BlobServiceClient<br>Cloud Sync| AZ
+    AZ --> CUR
+    
+    CUR -->|HTTP/WASB| PBI
+'''
+
+## Data Model
+* **[View Detailed Star Schema (Entity-Relationship Diagram)](./docs/diagrams/data_model.mmd)**
