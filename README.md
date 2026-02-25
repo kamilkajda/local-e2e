@@ -31,9 +31,12 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 * **Performance Monitoring:** Every agentic interaction is measured (Performance Monitor) to optimize execution across different hardware profiles (**RTX 5070 Ti** vs **RTX 3070 Laptop**).
 
 ### Agent Workflows
-**Phase 1: Context & Backlog Generation** ![Agent Phase 1 Workflow](assets/images/Diagrams/agent_phase1_backlog.png)
+**Phase 1: Context & Backlog Generation** 
+
+![Agent Phase 1 Workflow](assets/images/Diagrams/agent_phase1_backlog.png)
 
 **Phase 2: Code Generation** 
+
 ![Agent Phase 2 Workflow](assets/images/Diagrams/agent_phase2_developer.png)
 
 ## Architecture & Workflow
