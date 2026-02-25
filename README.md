@@ -33,7 +33,8 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 ### Agent Workflows
 **Phase 1: Context & Backlog Generation** ![Agent Phase 1 Workflow](assets/images/Diagrams/agent_phase1_backlog.png)
 
-**Phase 2: Code Generation** ![Agent Phase 2 Workflow](assets/images/Diagrams/agent_phase2_developer.png)
+**Phase 2: Code Generation** 
+![Agent Phase 2 Workflow](assets/images/Diagrams/agent_phase2_developer.png)
 
 ## Architecture & Workflow
 1. **Source:** Statistics Poland API (GUS BDL).
