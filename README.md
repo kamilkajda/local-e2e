@@ -1,9 +1,11 @@
 # Local E2E Data Engineering Project: Polish Economic Analysis
 
-### 🚀 [View Interactive Report (Power BI)](https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9) 
-
 ### 📊 Dashboard Preview
-![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Executive%20Summary.png)
+**Page 1: Executive Summary**
+![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Page%201%20-%20Executive%20Summary.png)
+
+**Page 2: Regional Map**
+![Regional Map](assets/images/Power%20BI%20Dashboard%20Screens/Page%202%20-%20Regional%20Map.png)
 
 ## Project Overview
 This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
