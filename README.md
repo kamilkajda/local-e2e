@@ -2,6 +2,9 @@
 
 ### 🚀 [View Interactive Report (Power BI)](https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9) 
 
+### 📊 Dashboard Preview
+![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Executive%20Summary.png)
+
 ## Project Overview
 This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
 
@@ -26,8 +29,9 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 * **Performance Monitoring:** Every agentic interaction is measured (Performance Monitor) to optimize execution across different hardware profiles (**RTX 5070 Ti** vs **RTX 3070 Laptop**).
 
 ### Agent Workflows
-* [View Phase 1: Context & Backlog Generation Diagram](./docs/diagrams/agent_phase1_backlog.mmd)
-* [View Phase 2: Code Generation Diagram](./docs/diagrams/agent_phase2_developer.mmd)
+**Phase 1: Context & Backlog Generation** ![Agent Phase 1 Workflow](assets/images/Diagrams/agent_phase1_backlog.png)
+
+**Phase 2: Code Generation** ![Agent Phase 2 Workflow](assets/images/Diagrams/agent_phase2_developer.png)
 
 ## Architecture & Workflow
 1. **Source:** Statistics Poland API (GUS BDL).
@@ -41,6 +45,9 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 6. **AI Prioritization Loop:** Automated backlog generation where tasks are scored via RICE:
    $$RICE = \frac{Reach \times Impact \times Confidence}{Effort}$$
 7. **Visualization:** Power BI Desktop connected via HTTP/WASB, featuring dynamic trend analysis and regional benchmarking.
+
+## Architecture Diagram
+![Architecture Diagram](assets/images/Diagrams/architecture_model.png)
 
 ## Data Scope
 The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
