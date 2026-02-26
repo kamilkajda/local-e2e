@@ -1,12 +1,5 @@
 # Local E2E Data Engineering Project: Polish Economic Analysis
 
-### 📊 Dashboard Preview
-**Page 1: Executive Summary**
-![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Page%201%20-%20Executive%20Summary.png)
-
-**Page 2: Regional Map**
-![Regional Map](assets/images/Power%20BI%20Dashboard%20Screens/Page%202%20-%20Regional%20Map.png)
-
 ## Project Overview
 This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
 
@@ -17,6 +10,14 @@ This project demonstrates a comprehensive, end-to-end data engineering pipeline 
 * **Data Quality & Imputation:** Advanced transformation logic implementing linear interpolation to fill data gaps or confidential records (e.g., Opolskie 2023).
 * **Professional Tooling:** Strict enforcement of code style using **Black** (formatter) and **Flake8** (linter), with unit tests powered by **Pytest**.
 * **Business Intelligence:** Enterprise-grade Power BI reporting featuring a Bento Grid layout, multi-page navigation, and dynamic DAX narratives.
+
+### 📊 Dashboard Preview
+**Page 1: Executive Summary**
+![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Page%201%20-%20Executive%20Summary.png)
+
+**Page 2: Regional Map**
+![Regional Map](assets/images/Power%20BI%20Dashboard%20Screens/Page%202%20-%20Regional%20Map.png)
+
 
 ## 🤖 Agentic Orchestration & AI Development
 
