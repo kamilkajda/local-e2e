@@ -1,109 +1,109 @@
 ```python
-import os
+# Import required libraries
 from pyspark.sql import SparkSession
-from pyspark.sql.utils import AnalysisException
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StringType, IntegerType, DoubleType, TimestampType, DateType
 
 class SchemaValidator:
-    def __init__(self, spark: SparkSession):
-        self.spark = spark
+    def __init__(self, spark_session: SparkSession):
+        self.spark = spark_session
 
-    def validate_schema(self, df: SparkSession, schema_path: str) -> None:
+    def validate_schema(self, df: 'pyspark.sql.DataFrame', expected_schema: StructType):
         """
-        Validates the schema of a Parquet file against the provided schema.
+        Validates the schema of a PySpark DataFrame against an expected schema.
 
         Args:
-            df (SparkSession): The DataFrame to be validated.
-            schema_path (str): The path to the schema file (.json or .parquet).
+            df (PySpark DataFrame): The DataFrame to be validated.
+            expected_schema (StructType): The expected schema.
 
-        Raises:
-            AnalysisException: If the schema does not match the actual data.
+        Returns:
+            bool: True if the schemas match, False otherwise.
         """
-        # Load the schema from the provided path
-        if schema_path.endswith('.json'):
-            loaded_schema = self.spark.read.json(schema_path).schema
-        elif schema_path.endswith('.parquet'):
-            loaded_schema = self.spark.read.parquet(schema_path).schema
-        else:
-            raise ValueError("Unsupported schema file type. Only .json and .parquet are supported.")
 
-        # Compare the loaded schema with the actual data schema
-        if df.schema != loaded_schema:
-            raise AnalysisException(f"Schema mismatch: {df.schema} != {loaded_schema}")
+        # Get the current schema of the DataFrame
+        current_schema = df.schema
 
-    def validate_parquet(self, path: str) -> None:
+        # Compare the current and expected schemas
+        return current_schema == expected_schema
+
+    def check_corrupt_parquet_files(self, path_to_parquet_file: str) -> bool:
         """
-        Validates a Parquet file against its own schema.
+        Checks if a Parquet file is corrupt by loading it into a PySpark DataFrame
+        and then validating its schema.
 
         Args:
-            path (str): The path to the Parquet file.
+            path_to_parquet_file (str): The path to the Parquet file.
 
-        Raises:
-            AnalysisException: If the schema does not match the actual data.
+        Returns:
+            bool: True if the Parquet file is corrupt, False otherwise.
         """
+
+        # Create a temporary SparkSession
+        temp_session = self.spark.newSession()
+
+        # Load the Parquet file into a DataFrame using the temporary session
+        df = temp_session.read.parquet(path_to_parquet_file)
+
         try:
-            # Read the Parquet file and validate its schema
-            self.validate_schema(self.spark.read.parquet(path), path)
-        except AnalysisException as e:
-            raise AnalysisException(f"Schema validation failed for {path}: {e}")
+            # Try to get the schema of the DataFrame
+            _ = df.schema
 
-    def register_schema(self, df: SparkSession, schema_path: str) -> None:
-        """
-        Registers a Parquet file's schema in the Spark catalog.
+            # If we get here, then the Parquet file is not corrupt
+            return False
 
-        Args:
-            df (SparkSession): The DataFrame to be registered.
-            schema_path (str): The path to the Parquet file.
+        except Exception as e:
+            # If we get an exception here, then the Parquet file is corrupt
+            print(f"Error loading or validating {path_to_parquet_file}: {str(e)}")
+            return True
 
-        Raises:
-            AnalysisException: If the schema does not match the actual data.
-        """
-        # Register the schema
-        self.spark.catalog.registerTempView(schema_path)
 
-    def validate_schema_from_catalog(self, df: SparkSession) -> None:
-        """
-        Validates a DataFrame against its registered schema in the Spark catalog.
-
-        Args:
-            df (SparkSession): The DataFrame to be validated.
-
-        Raises:
-            AnalysisException: If the schema does not match the actual data.
-        """
-        try:
-            # Check if the DataFrame has a registered schema
-            self.spark.catalog.listFunctions().filter(lambda x: x.name == df.schema.simpleString()).collect()
-        except AnalysisException as e:
-            raise AnalysisException(f"Schema validation failed for {df}: {e}")
-
-# Example usage
 if __name__ == "__main__":
     # Create a SparkSession
-    spark = SparkSession.builder.appName("PySpark Schema Validator").getOrCreate()
+    spark = SparkSession.builder.getOrCreate()
 
-    # Load data into a DataFrame
-    df = spark.read.parquet("/path/to/your/data.parquet")
+    # Define a sample expected schema
+    expected_schema = StructType([
+        StringType().nullable(),
+        IntegerType().nullable(),
+        DoubleType().nullable(),
+        TimestampType().nullable(),
+        DateType().nullable()
+    ])
 
-    # Validate the schema of the Parquet file against its own schema
+    # Create an instance of the SchemaValidator class
     validator = SchemaValidator(spark)
-    try:
-        validator.validate_parquet("/path/to/your/data.parquet")
-        print("Schema validation successful!")
-    except AnalysisException as e:
-        print(f"Error: {e}")
 
-    # Register the schema in the Spark catalog
-    validator.register_schema(df, "/path/to/your/schema.json")
+    # Load a sample Parquet file into a DataFrame
+    df = spark.read.parquet("path_to_your_parquet_file")
 
-    # Validate a DataFrame against its registered schema
-    try:
-        validator.validate_schema_from_catalog(df)
-        print("Schema validation successful!")
-    except AnalysisException as e:
-        print(f"Error: {e}")
+    # Validate the schema of the DataFrame
+    if validator.validate_schema(df, expected_schema):
+        print("The schema of the DataFrame matches the expected schema.")
+    else:
+        print("The schema of the DataFrame does not match the expected schema.")
+
+    # Check for corrupt Parquet files
+    path_to_parquet_file = "path_to_your_parquet_file.parquet"
+    if validator.check_corrupt_parquet_files(path_to_parquet_file):
+        print(f"The Parquet file at {path_to_parquet_file} is corrupt.")
+    else:
+        print(f"The Parquet file at {path_to_parquet_file} is not corrupt.")
+
+# Example use case
+schema_validator = SchemaValidator(SparkSession.builder.getOrCreate())
+expected_schema = StructType([
+    StringType().nullable(),
+    IntegerType().nullable(),
+    DoubleType().nullable(),
+    TimestampType().nullable(),
+    DateType().nullable()
+])
+
+df = SparkSession.builder.getOrCreate().read.parquet("path_to_your_parquet_file")
+
+if schema_validator.validate_schema(df, expected_schema):
+    print("The schema of the DataFrame matches the expected schema.")
+else:
+    print("The schema of the DataFrame does not match the expected schema.")
+
+schema_validator.check_corrupt_parquet_files("path_to_your_parquet_file.parquet")
 ```
-
-Note that this is just an example code and you should adjust it according to your specific use case. This module uses PySpark's built-in schema validation features, which can be accessed through the `validate_schema` method. The `validate_parquet` method reads a Parquet file, validates its schema against its own schema, and raises an exception if they do not match. The `register_schema` method registers a Parquet file's schema in the Spark catalog, and the `validate_schema_from_catalog` method checks if a DataFrame has a registered schema that matches its actual data schema.
-
-Make sure to replace the paths and schema file name with your own values. Also note that this code assumes that you have already loaded the data into a DataFrame using PySpark's built-in `read` methods (e.g., `spark.read.parquet`, `spark.read.json`).
