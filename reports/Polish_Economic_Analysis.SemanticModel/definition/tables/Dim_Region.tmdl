@@ -55,10 +55,9 @@ table Dim_Region
 		mode: import
 		source =
 				let
-				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null]),
-				    #"Renamed Columns" = Table.RenameColumns(Source,{{"region", "region"}})
+				    Source = Parquet.Document(Web.Contents(AzuriteBaseUrl & "dim_region/data.parquet"), [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
 				in
-				    #"Renamed Columns"
+				    Source
 
 	annotation PBI_NavigationStepName = Navigation
 

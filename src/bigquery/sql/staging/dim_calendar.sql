@@ -1,0 +1,4 @@
+CREATE OR REPLACE VIEW `my-bigquery-lab-492816.gus_staging.dim_calendar` AS
+
+SELECT EXTRACT(YEAR FROM date_val) AS year
+FROM UNNEST(GENERATE_DATE_ARRAY('2000-01-01', '2024-01-01', INTERVAL 1 YEAR)) AS date_val

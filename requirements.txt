@@ -10,3 +10,4 @@ ollama
 pytest
 google-cloud-bigquery
 google-auth
+db-types

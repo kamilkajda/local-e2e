@@ -59,6 +59,35 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 ## Architecture Diagram
 ![Architecture Diagram](assets/images/Diagrams/architecture_model.png)
 
+## ☁️ Cloud Deployment (BigQuery)
+
+The local pipeline architecture was replicated on Google Cloud Platform to demonstrate production-grade cloud deployment. The core transformation logic was re-implemented in **GoogleSQL on BigQuery**, replacing the local PySpark layer while preserving the same star schema structure and data quality standards.
+
+**Key Cloud Components:**
+* **Google Cloud Storage:** Raw JSONL files uploaded as the ingestion landing zone, mirroring the local Azurite Bronze layer.
+* **BigQuery (`gus_raw`):** 32 raw tables loaded from JSONL, preserving the original nested JSON structure (`RECORD REPEATED`) from the GUS API responses.
+* **BigQuery (`gus_staging`):** Star schema replicated using GoogleSQL — `fact_economics` built via wildcard table scan (`gus_raw.*`) with `UNNEST` for nested array flattening, partitioned by year and clustered by `region_id` and `metric_id`.
+* **Python Ingestion Scripts:** `src/bigquery/proces_raw_to_line_json.py` converts raw JSON to JSONL format; `src/bigquery/import_bigquery.py` loads all files to BigQuery using the `google-cloud-bigquery` client — both driven by `configs/dev/settings.json`.
+* **Service Account:** IAM-managed credentials with `BigQuery Data Editor` and `BigQuery Job User` roles for secure programmatic access.
+
+**GoogleSQL vs PySpark — Key Differences:**
+* `UNNEST()` replaces `explode()` for nested array flattening
+* Wildcard tables (`gus_raw.*`) replace manual `unionByName` across DataFrames
+* `RANGE_BUCKET` partitioning replaces Parquet file partitioning
+* `DATE_DIFF()` and `DATE_TRUNC()` replace PySpark date functions
+
+```mermaid
+flowchart LR
+    A[GUS BDL API] -->|Python client| B[Raw JSON files]
+    B -->|proces_raw_to_line_json.py| C[JSONL files]
+    C -->|import_bigquery.py| D[(BigQuery\ngus_raw\n32 tables)]
+    D -->|GoogleSQL\nUNNEST + Wildcard| E[(BigQuery\ngus_staging\nStar Schema)]
+    E --> F[fact_economics\npartitioned by year]
+    E --> G[dim_region]
+    E --> H[dim_metrics]
+    E --> I[dim_calendar]
+```
+
 ## Data Scope
 The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Labor Market:** Average Gross Wages, Registered Unemployment Rate.
@@ -68,11 +97,12 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Public Finance & Business:** Budget Revenues/Expenditures, Business Entities per 10k population.
 
 ## Directory Structure
-* `data/`: Raw (JSON), Staging (Parquet), and Curated data layers.
+* `data/`: Raw (JSON), Staging (Parquet), Curated data layers, and `bq_ready/` (JSONL files for BigQuery ingestion).
 * `src/pyspark/`: Core ETL logic (Main orchestrator, Spark setup, GUS client, Transformers).
+* `src/bigquery/`: Google Cloud pipeline scripts — JSONL conversion (`proces_raw_to_line_json.py`) and BigQuery batch loader (`import_bigquery.py`); SQL transformation models in `src/bigquery/sql/staging/`.
 * `src/ai_agent/`: Orchestration scripts for local LLM Analysts and PO Agents.
 * `tests/`: Unit tests and mocks for pipeline and agent validation.
-* `configs/`: Environment-specific settings (`dev`/`prod`) and metric definitions.
+* `configs/`: Environment-specific settings (`dev`/`prod`) and metric definitions. Includes BigQuery project and dataset configuration.
 * `docs/backlog_output/`: AI-generated prioritized backlogs and Gherkin stories.
 * `scripts/`: Automation scripts for service management and pipeline execution.
 * `exploration/`: Advanced debugging tools, API inspectors, and data availability checkers.
@@ -85,6 +115,7 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Runtime:** Python 3.11 (optimized for PySpark 3.4.1 compatibility).
 * **Java:** JDK 17 (Required for Spark/Hadoop ecosystem).
 * **Emulator:** Node.js for Azurite Blob Storage.
+* **Cloud (BigQuery):** Google Cloud project with BigQuery and Cloud Storage APIs enabled; service account JSON key with `BigQuery Data Editor` and `BigQuery Job User` roles; `google-cloud-bigquery` and `google-auth` Python packages (included in `requirements.txt`).
 
 ## Quick Start
 1. **Install Project (Editable Mode):** `pip install -e .`
@@ -92,6 +123,11 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 3. **Generate/Analyze Backlog:** `python src/ai_agent/backlog_orchestrator.py`
 4. **Run ETL Pipeline:** `.\scripts\run_etl_dev.ps1`
 5. **Run Quality Checks:** `pytest -v tests/`
+6. **BigQuery Pipeline (Cloud):**
+   - Set `GOOGLE_APPLICATION_CREDENTIALS` to your service account key path in `configs/dev/settings.json`
+   - Convert raw JSON to JSONL: `python src/bigquery/proces_raw_to_line_json.py`
+   - Load to BigQuery: `python src/bigquery/import_bigquery.py`
+   - Run SQL models in `src/bigquery/sql/staging/` via BigQuery UI or scheduled queries
 
 ## Maintenance & Cleanup
 To maintain a clean environment or reset data states, use the following utility scripts:
@@ -106,11 +142,13 @@ Active `settings.json` files are ignored by Git. Use the provided templates:
 * **Security:** All `settings.json` content is automatically redacted by the AI Analyst Agent during context ingestion.
 
 ## AI Transparency
-This project was developed in collaboration with **Gemini 3.1 Pro**. The AI served as a pair-programmer for:
+This project was developed in collaboration with **Gemini 3.1 Pro** and **Claude Sonnet 4.6 (Anthropic)**. The AI served as a pair-programmer for:
 * Architecting the Windows-compatible Spark environment.
 * Designing complex DAX measures for economic benchmarking.
 * Building a **Multi-Agent Orchestrator** for automated backlog management.
 * Implementing **Secret Scrubbing** and professional code quality standards (Black/Flake8).
+
+The **Google Cloud / BigQuery deployment** was developed with guidance and code review from **Claude Sonnet 4.6 (Anthropic)** — covering ingestion scripts, GoogleSQL star schema models, partitioning strategy, and IAM configuration.
 
 ### Data Model
 ![Data Model Star Schema](assets/images/Diagrams/data_model.png)
