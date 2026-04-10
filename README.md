@@ -149,13 +149,8 @@ Active `settings.json` files are ignored by Git. Use the provided templates:
 * **Security:** All `settings.json` content is automatically redacted by the AI Analyst Agent during context ingestion.
 
 ## AI Transparency
-This project was developed in collaboration with **Gemini 3.1 Pro** and **Claude Sonnet 4.6 (Anthropic)**. The AI served as a pair-programmer for:
-* Architecting the Windows-compatible Spark environment.
-* Designing complex DAX measures for economic benchmarking.
-* Building a **Multi-Agent Orchestrator** for automated backlog management.
-* Implementing **Secret Scrubbing** and professional code quality standards (Black/Flake8).
 
-The **Google Cloud / BigQuery deployment** was developed with guidance and code review from **Claude Sonnet 4.6 (Anthropic)** — covering ingestion scripts, GoogleSQL star schema models, partitioning strategy, and IAM configuration.
+Built with AI pair-programming support (code review, debugging, architecture discussion). Design decisions, data modeling, and analytical conclusions are my own.
 
 ### Data Model
 ![Data Model Star Schema](assets/images/Diagrams/data_model.png)
