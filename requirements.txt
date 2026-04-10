@@ -8,6 +8,9 @@ matplotlib
 jupyter
 ollama
 pytest
+black
+flake8
+isort
 google-cloud-bigquery
 google-auth
-db-types
+db-dtypes

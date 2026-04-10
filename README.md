@@ -97,10 +97,11 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Public Finance & Business:** Budget Revenues/Expenditures, Business Entities per 10k population.
 
 ## Directory Structure
-* `data/`: Raw (JSON), Staging (Parquet), Curated data layers, and `bq_ready/` (JSONL files for BigQuery ingestion).
+* `data/`: Raw (JSON), Staging (Parquet), Processed (intermediate Parquet), Curated data layers, and `bq_ready/` (JSONL files for BigQuery ingestion).
 * `src/pyspark/`: Core ETL logic (Main orchestrator, Spark setup, GUS client, Transformers).
 * `src/bigquery/`: Google Cloud pipeline scripts — JSONL conversion (`proces_raw_to_line_json.py`) and BigQuery batch loader (`import_bigquery.py`); SQL transformation models in `src/bigquery/sql/staging/`.
 * `src/ai_agent/`: Orchestration scripts for local LLM Analysts and PO Agents.
+* `src/utils/`: Azurite utility scripts (connection testing, content inspection, storage reset, map preparation).
 * `tests/`: Unit tests and mocks for pipeline and agent validation.
 * `configs/`: Environment-specific settings (`dev`/`prod`) and metric definitions. Includes BigQuery project and dataset configuration.
 * `docs/backlog_output/`: AI-generated prioritized backlogs and Gherkin stories.
@@ -124,7 +125,7 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 4. **Run ETL Pipeline:** `.\scripts\run_etl_dev.ps1`
 5. **Run Quality Checks:** `pytest -v tests/`
 6. **BigQuery Pipeline (Cloud):**
-   - Set `GOOGLE_APPLICATION_CREDENTIALS` to your service account key path in `configs/dev/settings.json`
+   - Set `credentials_path` in `configs/dev/settings.json` to the absolute path of your service account JSON key file
    - Convert raw JSON to JSONL: `python src/bigquery/proces_raw_to_line_json.py`
    - Load to BigQuery: `python src/bigquery/import_bigquery.py`
    - Run SQL models in `src/bigquery/sql/staging/` via BigQuery UI or scheduled queries
@@ -137,7 +138,7 @@ To maintain a clean environment or reset data states, use the following utility 
 
 ## Configuration Setup
 Active `settings.json` files are ignored by Git. Use the provided templates:
-* **Local/Server Mode:** Copy `settings.template.json` to `settings.json`.
+* **Local/Server Mode:** Copy `settings_template.json` to `settings.json`.
 * **LAN Client Mode:** Copy `settings.lan.template.json` to `settings.json` (update Host IP).
 * **Security:** All `settings.json` content is automatically redacted by the AI Analyst Agent during context ingestion.
 
