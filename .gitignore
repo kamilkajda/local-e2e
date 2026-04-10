@@ -22,6 +22,7 @@ data/curated/
 !data/curated/.gitkeep
 data/staging/
 !data/staging/.gitkeep
+data/bq_ready/
 
 # IDE/System
 .vscode/

@@ -13,5 +13,12 @@
     "curated": "data/curated_prod",
     "logs": "logs_prod"
   },
+  "bigquery": {
+    "project": "",
+    "dataset": "",
+    "bq_ready_path": "data/bq_ready",
+    "credentials_path": ""
+  },
   "_comment": "Use this template on CLIENT machines connecting to the Laptop (Server) via LAN. Points to 192.168.0.218."
+
 }

@@ -8,3 +8,5 @@ matplotlib
 jupyter
 ollama
 pytest
+google-cloud-bigquery
+google-auth

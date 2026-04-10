@@ -12,5 +12,11 @@
     "processed": "data/processed",
     "curated": "data/curated",
     "logs": "logs"
+  },
+  "bigquery": {
+    "project": "",
+    "dataset": "",
+    "bq_ready_path": "data/bq_ready",
+    "credentials_path": ""
   }
 }
