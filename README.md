@@ -1,6 +1,7 @@
 # Local E2E Data Engineering Project: Polish Economic Analysis
 
-### 🚀 [View Interactive Report (Power BI)](https://app.powerbi.com/view?r=eyJrIjoiZmRiMDUyMTAtMTU0Mi00NjZhLWEwOTgtMmNlY2U1ZTc5YTY1IiwidCI6ImM5YWJlNDc4LTkwYWQtNDgxNC05MWZiLWI0NDY1MzljYmQwZSJ9) 
+### 📺 Project Overview [Video]
+[![Watch the video](https://img.youtube.com/vi/LYtqpXoJhSI/maxresdefault.jpg)](https://youtu.be/LYtqpXoJhSI)
 
 ## Project Overview
 This project demonstrates a comprehensive, end-to-end data engineering pipeline built entirely in a local environment to simulate a production cloud-scale architecture. The system seamlessly integrates data extraction from the Statistics Poland (GUS) BDL API, complex PySpark transformations (including linear interpolation for missing data), multi-layered Azure Blob Storage simulation (Azurite), and enterprise-grade Power BI visualization. Additionally, the project features a cutting-edge Proof of Concept (PoC) for agentic workflows, utilizing local LLMs (Llama 3.1) for automated backlog generation, prioritization, and code scaffolding.
@@ -12,6 +13,14 @@ This project demonstrates a comprehensive, end-to-end data engineering pipeline 
 * **Data Quality & Imputation:** Advanced transformation logic implementing linear interpolation to fill data gaps or confidential records (e.g., Opolskie 2023).
 * **Professional Tooling:** Strict enforcement of code style using **Black** (formatter) and **Flake8** (linter), with unit tests powered by **Pytest**.
 * **Business Intelligence:** Enterprise-grade Power BI reporting featuring a Bento Grid layout, multi-page navigation, and dynamic DAX narratives.
+
+### 📊 Dashboard Preview
+**Page 1: Executive Summary**
+![Executive Summary](assets/images/Power%20BI%20Dashboard%20Screens/Page%201%20-%20Executive%20Summary.png)
+
+**Page 2: Regional Map**
+![Regional Map](assets/images/Power%20BI%20Dashboard%20Screens/Page%202%20-%20Regional%20Map.png)
+
 
 ## 🤖 Agentic Orchestration & AI Development
 
@@ -26,8 +35,13 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 * **Performance Monitoring:** Every agentic interaction is measured (Performance Monitor) to optimize execution across different hardware profiles (**RTX 5070 Ti** vs **RTX 3070 Laptop**).
 
 ### Agent Workflows
-* [View Phase 1: Context & Backlog Generation Diagram](./docs/diagrams/agent_phase1_backlog.mmd)
-* [View Phase 2: Code Generation Diagram](./docs/diagrams/agent_phase2_developer.mmd)
+**Phase 1: Context & Backlog Generation** 
+
+![Agent Phase 1 Workflow](assets/images/Diagrams/agent_phase1_backlog.png)
+
+**Phase 2: Code Generation** 
+
+![Agent Phase 2 Workflow](assets/images/Diagrams/agent_phase2_developer.png)
 
 ## Architecture & Workflow
 1. **Source:** Statistics Poland API (GUS BDL).
@@ -41,6 +55,9 @@ The project features a **local Multi-Agent System** that acts as a technical co-
 6. **AI Prioritization Loop:** Automated backlog generation where tasks are scored via RICE:
    $$RICE = \frac{Reach \times Impact \times Confidence}{Effort}$$
 7. **Visualization:** Power BI Desktop connected via HTTP/WASB, featuring dynamic trend analysis and regional benchmarking.
+
+## Architecture Diagram
+![Architecture Diagram](assets/images/Diagrams/architecture_model.png)
 
 ## Data Scope
 The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
@@ -95,46 +112,5 @@ This project was developed in collaboration with **Gemini 3.1 Pro**. The AI serv
 * Building a **Multi-Agent Orchestrator** for automated backlog management.
 * Implementing **Secret Scrubbing** and professional code quality standards (Black/Flake8).
 
-## Architecture Diagram
-```mermaid
-graph TD
-    subgraph Data Extraction
-        API[GUS BDL API<br>REST / JSON]
-        GC[GusClient<br>Pagination & Rate Limiting]
-        RAW[(Local Raw Layer<br>/data/raw/*.json)]
-    end
-
-    subgraph Data Processing
-        SP[PySpark Engine<br>WinUtils / WASB]
-        T_FLAT[Flattener & Parser]
-        T_IMPUTE[Missing Value Imputation<br>Linear Interpolation]
-        T_DIM[Dimension Builder]
-    end
-
-    subgraph Data Persistence
-        STG[(Local Staging<br>/data/staging/)]
-        AZ[Azurite Emulator<br>Blob Storage]
-        CUR[(Curated Zone<br>data.parquet)]
-    end
-
-    subgraph Consumption
-        PBI[Power BI Desktop<br>Web Connector]
-    end
-
-    API -->|HTTP GET| GC
-    GC -->|Save JSON| RAW
-    RAW -->|Read MultiLine| SP
-    
-    SP --> T_FLAT
-    T_FLAT --> T_IMPUTE
-    T_IMPUTE --> T_DIM
-    
-    T_DIM -->|coalesce 1| STG
-    STG -->|BlobServiceClient<br>Cloud Sync| AZ
-    AZ --> CUR
-    
-    CUR -->|HTTP/WASB| PBI
-```
-
-## Data Model
-* **[View Detailed Star Schema (Entity-Relationship Diagram)](./docs/diagrams/data_model.mmd)**
+### Data Model
+![Data Model Star Schema](assets/images/Diagrams/data_model.png)

@@ -28,7 +28,7 @@ data/bq_ready/
 .vscode/
 .DS_Store
 Thumbs.db
-
+  
 # Configuration (Ignore local active settings, keep ALL templates)
 configs/dev/settings.json
 configs/prod/settings.json
