@@ -1,5 +1,7 @@
 # Local E2E Data Engineering Project: Polish Economic Analysis
 
+[![CI](https://github.com/kamilkajda/local-e2e/actions/workflows/ci.yml/badge.svg)](https://github.com/kamilkajda/local-e2e/actions/workflows/ci.yml)
+
 ### 📺 Project Overview [Video]
 [![Watch the video](https://img.youtube.com/vi/LYtqpXoJhSI/maxresdefault.jpg)](https://youtu.be/LYtqpXoJhSI)
 
@@ -106,6 +108,8 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * `configs/`: Environment-specific settings (`dev`/`prod`) and metric definitions. Includes BigQuery project and dataset configuration.
 * `docs/backlog_output/`: AI-generated prioritized backlogs and Gherkin stories.
 * `scripts/`: Automation scripts for service management and pipeline execution.
+* `.github/workflows/`: CI pipeline — runs lint (`flake8`) and transformer unit tests on every push via GitHub Actions.
+* `docker-compose.yml`: Single-command Azurite startup for Linux/Mac users — `docker-compose up -d` (no Node.js installation required).
 * `exploration/`: Advanced debugging tools, API inspectors, and data availability checkers.
 * `assets/maps/`: TopoJSON files processed for Power BI Shape Map integration.
 * `docs/`: Detailed technical documentation, DAX blueprints, and setup guides.
@@ -117,13 +121,14 @@ The pipeline monitors a comprehensive set of indicators across 16 Voivodeships:
 * **Java:** JDK 17 (Required for Spark/Hadoop ecosystem).
 * **Emulator:** Node.js for Azurite Blob Storage.
 * **Cloud (BigQuery):** Google Cloud project with BigQuery and Cloud Storage APIs enabled; service account JSON key with `BigQuery Data Editor` and `BigQuery Job User` roles; `google-cloud-bigquery` and `google-auth` Python packages (included in `requirements.txt`).
+* **Testing:** Python 3.11 is required to run `pytest` — PySpark 3.4.1 workers are incompatible with Python 3.12+. Create a virtual environment with Python 3.11 and install dependencies before running tests.
 
 ## Quick Start
 1. **Install Project (Editable Mode):** `pip install -e .`
 2. **Start Services (Azurite):** `.\scripts\start_all.ps1`
 3. **Generate/Analyze Backlog:** `python src/ai_agent/backlog_orchestrator.py`
 4. **Run ETL Pipeline:** `.\scripts\run_etl_dev.ps1`
-5. **Run Quality Checks:** `pytest -v tests/`
+5. **Run Quality Checks:** `pytest tests/test_transformer.py -v` (must run inside a Python 3.11 environment)
 6. **BigQuery Pipeline (Cloud):**
    - Set `credentials_path` in `configs/dev/settings.json` to the absolute path of your service account JSON key file
    - Convert raw JSON to JSONL: `python src/bigquery/proces_raw_to_line_json.py`
@@ -135,6 +140,7 @@ To maintain a clean environment or reset data states, use the following utility 
 * **Reset Cloud Storage:** `python .\exploration\tools\reset_azurite.py` (Wipes Azurite containers).
 * **Clear Spark Staging:** `.\scripts\maintenance\clean_staging.ps1` (Removes transient Parquet files).
 * **Purge Raw API Data:** `.\scripts\maintenance\clean_raw_data.ps1` (Deletes all JSON source files).
+* **Azurite via Docker (Linux/Mac):** `docker-compose up -d` (alternative to `start_all.ps1` for non-Windows environments).
 
 ## Configuration Setup
 Active `settings.json` files are ignored by Git. Use the provided templates:
